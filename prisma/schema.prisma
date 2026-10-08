@@ -1,0 +1,451 @@
+// Lama Hotel & Lodge — database schema
+// PostgreSQL + Prisma. All primary keys are UUIDs.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────
+
+enum AdminRole {
+  OWNER
+  STAFF // reserved for future staff accounts
+}
+
+enum RoomStatus {
+  AVAILABLE
+  UNAVAILABLE
+}
+
+enum BookingStatus {
+  NEW
+  CONTACTED
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum ReservationStatus {
+  INQUIRY
+  PENDING
+  CONFIRMED
+  CHECKED_IN
+  CHECKED_OUT
+  CANCELLED
+  NO_SHOW
+}
+
+enum PaymentStatus {
+  UNPAID
+  PARTIAL
+  PAID
+  REFUNDED
+}
+
+enum BookingSource {
+  WEBSITE
+  WALK_IN
+  PHONE
+  WHATSAPP
+  OTHER
+}
+
+enum NotificationChannel {
+  EMAIL
+}
+
+enum MessageStatus {
+  NEW
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+// ─────────────────────────────────────────────
+// Admin & security
+// ─────────────────────────────────────────────
+
+model AdminUser {
+  id           String    @id @default(uuid()) @db.Uuid
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         AdminRole @default(OWNER)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+/// Used for login rate limiting (failed attempts per IP / email).
+model LoginAttempt {
+  id        String   @id @default(uuid()) @db.Uuid
+  ipHash    String
+  email     String
+  success   Boolean
+  createdAt DateTime @default(now())
+
+  @@index([ipHash, createdAt])
+  @@index([email, createdAt])
+}
+
+// ─────────────────────────────────────────────
+// Hotel information (single row, id = "default")
+// ─────────────────────────────────────────────
+
+model HotelSettings {
+  id                     String   @id @default("default")
+  name                   String
+  tagline                String
+  description            String   @db.Text
+  phone                  String
+  whatsapp               String
+  email                  String
+  address                String
+  locationDescription    String
+  city                   String
+  region                 String   @default("")
+  country                String
+  /// 24h "HH:MM" — formatted for display (e.g. "2:00 PM").
+  checkInTime            String   @default("14:00")
+  checkOutTime           String   @default("12:00")
+  googleMapsUrl          String
+  /// Optional "Embed a map" iframe src from Google Maps (https://www.google.com/maps/embed?...).
+  googleMapsEmbedUrl     String   @default("")
+  googleBusinessUrl      String   @default("")
+  facebookUrl            String   @default("")
+  instagramUrl           String   @default("")
+  tiktokUrl              String   @default("")
+  youtubeUrl             String   @default("")
+  /// Where booking/contact notifications are sent (falls back to `email`).
+  notificationEmail      String   @default("")
+  /// Show aggregated availability (counts only) on the public website. Off until the owner keeps reservations up to date.
+  showPublicAvailability Boolean  @default(false)
+  /// Notification recipients & switches (Admin → Settings → Notifications).
+  /// Sending credentials (SMTP keys) live in environment variables, never here.
+  notifyEmail            Boolean  @default(true)
+  updatedAt              DateTime @updatedAt
+}
+
+model SEOSettings {
+  id                     String   @id @default("default")
+  siteTitle              String
+  /// e.g. "%s | Lama Hotel & Lodge"
+  titleTemplate          String
+  defaultDescription     String   @db.Text
+  defaultOgImageUrl      String   @default("")
+  googleSiteVerification String   @default("")
+  updatedAt              DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────────
+// Rooms
+// ─────────────────────────────────────────────
+
+model Room {
+  id                  String     @id @default(uuid()) @db.Uuid
+  name                String
+  slug                String     @unique
+  shortDescription    String     @default("")
+  description         String     @db.Text
+  /// Price per ROOM in whole currency units (never per guest).
+  price               Int
+  currency            String     @default("NPR")
+  /// Shown after the price, e.g. "/ room".
+  priceSuffix         String     @default("/ room")
+  bedDescription      String
+  capacityDescription String     @default("")
+  /// Kept in sync automatically with the number of ACTIVE RoomUnits (never edited by hand).
+  totalRooms          Int
+  status              RoomStatus @default(AVAILABLE)
+  featured            Boolean    @default(false)
+  sortOrder           Int        @default(0)
+  metaTitle           String     @default("")
+  metaDescription     String     @default("")
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+
+  images       RoomImage[]
+  inquiries    BookingInquiry[]
+  units        RoomUnit[]
+  reservations Reservation[]
+
+  @@index([sortOrder])
+}
+
+/// An individual physical room (e.g. "Standard 1"). Belongs to a room type (Room).
+model RoomUnit {
+  id        String   @id @default(uuid()) @db.Uuid
+  roomId    String   @db.Uuid
+  /// Display name, editable by the owner (e.g. "Standard 1" or "Room 101").
+  name      String
+  /// Short stable identifier (e.g. "STD-1").
+  code      String   @unique
+  /// Inactive rooms are kept for history but are not bookable and not counted in inventory.
+  active    Boolean  @default(true)
+  sortOrder Int      @default(0)
+  notes     String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  room        Room              @relation(fields: [roomId], references: [id], onDelete: Restrict)
+  assignments ReservationRoom[]
+
+  @@unique([roomId, name])
+  @@index([roomId, active, sortOrder])
+}
+
+model RoomImage {
+  id         String   @id @default(uuid()) @db.Uuid
+  roomId     String   @db.Uuid
+  url        String
+  /// Storage key (Cloudinary public_id or local file name) for deletion.
+  storageKey String   @default("")
+  alt        String
+  caption    String   @default("")
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@index([roomId, sortOrder])
+}
+
+// ─────────────────────────────────────────────
+// Facilities
+// ─────────────────────────────────────────────
+
+model Facility {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  description String   @default("")
+  /// Icon key from the built-in icon set (see src/components/shared/icons.tsx).
+  icon        String   @default("check")
+  active      Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([active, sortOrder])
+}
+
+// ─────────────────────────────────────────────
+// Gallery
+// ─────────────────────────────────────────────
+
+model GalleryCategory {
+  id        String         @id @default(uuid()) @db.Uuid
+  name      String
+  slug      String         @unique
+  sortOrder Int            @default(0)
+  images    GalleryImage[]
+}
+
+model GalleryImage {
+  id           String   @id @default(uuid()) @db.Uuid
+  url          String
+  storageKey   String   @default("")
+  title        String
+  caption      String   @default("")
+  alt          String
+  /// Photo credit / licence (required for Creative Commons images).
+  credit       String   @default("")
+  /// TRUE only for real photographs of Lama Hotel & Lodge.
+  /// FALSE for destination imagery (Jiri, mountains, etc.).
+  isHotelPhoto Boolean  @default(false)
+  featured     Boolean  @default(false)
+  sortOrder    Int      @default(0)
+  categoryId   String?  @db.Uuid
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  category GalleryCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([categoryId])
+  @@index([sortOrder])
+}
+
+// ─────────────────────────────────────────────
+// Editable content (homepage, Jiri guide, page SEO)
+// ─────────────────────────────────────────────
+
+model Page {
+  id              String        @id @default(uuid()) @db.Uuid
+  /// e.g. "home", "jiri", "jiri-things-to-do", "rooms", "contact"
+  slug            String        @unique
+  title           String
+  intro           String        @default("") @db.Text
+  metaTitle       String        @default("")
+  metaDescription String        @default("")
+  updatedAt       DateTime      @updatedAt
+  sections        PageSection[]
+}
+
+model PageSection {
+  id          String   @id @default(uuid()) @db.Uuid
+  pageId      String   @db.Uuid
+  /// Stable key for fixed sections (e.g. "hero", "welcome"); free-form sections use generated keys.
+  key         String
+  heading     String   @default("")
+  /// Simple Markdown subset (paragraphs, ## headings, lists, **bold**, links).
+  body        String   @default("") @db.Text
+  imageUrl    String   @default("")
+  imageAlt    String   @default("")
+  imageCredit String   @default("")
+  sortOrder   Int      @default(0)
+  updatedAt   DateTime @updatedAt
+
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@unique([pageId, key])
+  @@index([pageId, sortOrder])
+}
+
+model FAQ {
+  id        String   @id @default(uuid()) @db.Uuid
+  question  String
+  answer    String   @db.Text
+  active    Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([active, sortOrder])
+}
+
+// ─────────────────────────────────────────────
+// Guest submissions
+// ─────────────────────────────────────────────
+
+model BookingInquiry {
+  id                 String        @id @default(uuid()) @db.Uuid
+  name               String
+  email              String
+  phone              String
+  country            String
+  checkIn            DateTime      @db.Date
+  checkOut           DateTime      @db.Date
+  /// Informational only — never used for pricing.
+  guests             Int
+  roomId             String?       @db.Uuid
+  /// Snapshot of the room type name at submission time.
+  roomType           String
+  numberOfRooms      Int           @default(1)
+  message            String        @default("") @db.Text
+  arrivalInfo        String        @default("") @db.Text
+  /// Snapshot of the advertised price per room at submission (NOT a confirmed price).
+  requestedRoomPrice Int?
+  currency           String        @default("NPR")
+  status             BookingStatus @default(NEW)
+  /// Internal only — never shown to guests.
+  adminNotes         String        @default("") @db.Text
+  archived           Boolean       @default(false)
+  /// Salted hash of the submitter IP, for rate limiting only.
+  ipHash             String        @default("")
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  room         Room?         @relation(fields: [roomId], references: [id], onDelete: SetNull)
+  reservations Reservation[]
+
+  @@index([status, createdAt])
+  @@index([archived, createdAt])
+  @@index([ipHash, createdAt])
+  @@index([email, createdAt])
+}
+
+model ContactMessage {
+  id        String        @id @default(uuid()) @db.Uuid
+  name      String
+  email     String
+  phone     String        @default("")
+  message   String        @db.Text
+  status    MessageStatus @default(NEW)
+  ipHash    String        @default("")
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status, createdAt])
+  @@index([ipHash, createdAt])
+}
+
+// ─────────────────────────────────────────────
+// Reservations (admin-managed; private guest data)
+// ─────────────────────────────────────────────
+
+/// A reservation. Separate from BookingInquiry: inquiries are requests, reservations are managed bookings.
+/// Nights are [checkIn, checkOut): a stay 10–12 June occupies the nights of 10 and 11 June.
+model Reservation {
+  id            String            @id @default(uuid()) @db.Uuid
+  guestName     String
+  phone         String
+  email         String            @default("")
+  country       String            @default("")
+  checkIn       DateTime          @db.Date
+  checkOut      DateTime          @db.Date
+  /// Informational only — never used for pricing.
+  guests        Int               @default(1)
+  roomId        String            @db.Uuid
+  /// Room type name snapshot (kept if the room type is renamed).
+  roomType      String
+  numberOfRooms Int               @default(1)
+  source        BookingSource     @default(WALK_IN)
+  status        ReservationStatus @default(CONFIRMED)
+  paymentStatus PaymentStatus     @default(UNPAID)
+  /// Agreed total amount in whole currency units (optional). No payment gateway.
+  amount        Int?
+  currency      String            @default("NPR")
+  /// Internal only — never shown publicly.
+  adminNotes    String            @default("") @db.Text
+  /// The website inquiry this reservation was created from (the inquiry itself is preserved).
+  inquiryId     String?           @db.Uuid
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  room        Room              @relation(fields: [roomId], references: [id], onDelete: Restrict)
+  inquiry     BookingInquiry?   @relation(fields: [inquiryId], references: [id], onDelete: SetNull)
+  assignments ReservationRoom[]
+
+  // Date-range overlap queries: status filter + checkIn < to AND checkOut > from.
+  @@index([status, checkIn, checkOut])
+  @@index([roomId, checkIn, checkOut])
+  @@index([checkOut])
+  @@index([inquiryId])
+  @@index([createdAt])
+}
+
+/// Assignment of a physical room to a reservation.
+model ReservationRoom {
+  id            String   @id @default(uuid()) @db.Uuid
+  reservationId String   @db.Uuid
+  roomUnitId    String   @db.Uuid
+  createdAt     DateTime @default(now())
+
+  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  roomUnit    RoomUnit    @relation(fields: [roomUnitId], references: [id], onDelete: Restrict)
+
+  @@unique([reservationId, roomUnitId])
+  @@index([roomUnitId])
+}
+
+/// Delivery log for owner notifications (email), so failures are visible in the admin.
+model NotificationLog {
+  id        String              @id @default(uuid()) @db.Uuid
+  channel   NotificationChannel
+  /// e.g. "booking_inquiry", "contact_message", "test"
+  event     String
+  recipient String
+  success   Boolean
+  /// Provider response or error message (never contains credentials).
+  detail    String              @default("")
+  createdAt DateTime            @default(now())
+
+  @@index([createdAt])
+}
