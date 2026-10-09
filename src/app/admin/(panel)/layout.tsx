@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { LogOut, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { logout } from "@/server/actions/admin/account";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { LogoutButton } from "@/components/admin/LogoutButton";
 import { ToastProvider } from "@/components/admin/ToastProvider";
 import { AdminNotifier } from "@/components/admin/AdminNotifier";
 import { cookies } from "next/headers";
@@ -41,11 +41,7 @@ export default async function AdminPanelLayout({ children }: { children: React.R
           Signed in as <span className="font-medium text-ink">{admin.name}</span>
         </p>
         {/* Log out is visually separated from the primary action. */}
-        <form action={logout} className="border-l border-cream-200 pl-3">
-          <button type="submit" className="inline-flex min-h-10 items-center gap-2 rounded-md px-2 text-sm font-semibold text-muted hover:bg-cream-100 hover:text-ink" aria-label="Log out">
-            <LogOut size={16} aria-hidden /> <span className="hidden sm:inline">Log out</span>
-          </button>
-        </form>
+        <LogoutButton />
       </header>
       <main id="main" className="admin-main mx-auto min-w-0 max-w-6xl px-4 py-8 sm:px-6">
         <ToastProvider>{children}</ToastProvider>

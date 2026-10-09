@@ -36,9 +36,14 @@ export async function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${hotel.name} on ${label}`}
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-cream-100 hover:bg-white/10"
+                    className="group relative inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-white/15 text-cream-100 hover:bg-white/10"
                   >
-                    <Icon size={18} />
+                    {/* Shine sweep on hover */}
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full motion-reduce:hidden"
+                    />
+                    <Icon size={18} className="relative" />
                   </a>
                 </li>
               ))}

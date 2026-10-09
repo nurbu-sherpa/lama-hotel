@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { ArrowRight, Camera, DoorOpen, MapPin, Phone, ShowerHead, Wifi, Banknote } from "lucide-react";
+import { ArrowRight, Camera, DoorOpen, MapPin, Navigation, Phone, ShowerHead, Wifi, Banknote } from "lucide-react";
 import { getFacilities, getFaqsResolved, getGallery, getHotel, getPage, getRooms, section } from "@/lib/data/public";
 import { buildMetadata, hotelJsonLd, JsonLd, websiteJsonLd } from "@/lib/seo";
 import { getPublicAvailability } from "@/lib/data/availability";
@@ -13,7 +13,7 @@ import { LocationCard } from "@/components/public/LocationCard";
 import { ImageCredit } from "@/components/public/ImageCredit";
 import { SectionHeading } from "@/components/public/SectionHeading";
 import { FAQAccordion } from "@/components/public/FAQAccordion";
-import { FacilityIcon } from "@/components/shared/icons";
+import { FacilityIcon, WhatsAppIcon } from "@/components/shared/icons";
 
 export function generateMetadata() {
   return buildMetadata({ path: "/", pageSlug: "home", absoluteTitle: true });
@@ -122,11 +122,11 @@ export default async function HomePage() {
             <a href={telHref(hotel.phone)} className="inline-flex min-h-11 items-center gap-2 underline-offset-4 hover:text-white hover:underline">
               <Phone size={16} aria-hidden /> Call Us {formatPhoneIntl(hotel.phone)}
             </a>
-            <a href={whatsappHref(hotel.whatsapp)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center underline-offset-4 hover:text-white hover:underline">
-              WhatsApp
+            <a href={whatsappHref(hotel.whatsapp)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 underline-offset-4 hover:text-white hover:underline">
+              <WhatsAppIcon size={16} /> WhatsApp
             </a>
-            <a href={hotel.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center underline-offset-4 hover:text-white hover:underline">
-              Get Directions
+            <a href={hotel.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 underline-offset-4 hover:text-white hover:underline">
+              <Navigation size={16} aria-hidden /> Get Directions
             </a>
           </p>
         </div>

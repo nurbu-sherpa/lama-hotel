@@ -7,17 +7,12 @@ import { checkPublicAvailability, submitBookingInquiry, type PublicFormState } f
 import { Honeypot, SelectField, TextAreaField, TextField } from "@/components/ui/Field";
 import { ErrorSummary } from "@/components/ui/ErrorSummary";
 import { Turnstile } from "./Turnstile";
+import { DateRangePicker } from "./DateRangePicker";
 import { formatPrice, whatsappHref } from "@/lib/utils/format";
 
 type RoomOption = { slug: string; name: string; price: number; currency: string; priceSuffix: string; status: string; totalRooms: number };
 
 const initial: PublicFormState = { status: "idle" };
-
-function addDays(iso: string, days: number) {
-  const d = new Date(`${iso}T00:00:00Z`);
-  d.setUTCDate(d.getUTCDate() + days);
-  return d.toISOString().slice(0, 10);
-}
 
 export function BookingForm({ rooms, defaultRoom, today, whatsappNumber }: { rooms: RoomOption[]; defaultRoom?: string; today: string; whatsappNumber: string }) {
   const [state, action, pending] = useActionState(submitBookingInquiry, initial);
@@ -126,25 +121,16 @@ export function BookingForm({ rooms, defaultRoom, today, whatsappNumber }: { roo
         )}
 
         <div className="grid gap-5 sm:grid-cols-2">
-          <TextField
-            label="Check-in date"
-            name="checkIn"
-            type="date"
-            required
-            min={today}
-            value={checkIn}
-            onChange={(ev) => setCheckIn(ev.target.value)}
-            error={e.checkIn}
-          />
-          <TextField
-            label="Check-out date"
-            name="checkOut"
-            type="date"
-            required
-            min={checkIn ? addDays(checkIn, 1) : addDays(today, 1)}
-            value={checkOut}
-            onChange={(ev) => setCheckOut(ev.target.value)}
-            error={e.checkOut}
+          <DateRangePicker
+            className="sm:col-span-2"
+            checkIn={checkIn}
+            checkOut={checkOut}
+            today={today}
+            onChange={(inDate, outDate) => {
+              setCheckIn(inDate);
+              setCheckOut(outDate);
+            }}
+            errors={{ checkIn: e.checkIn, checkOut: e.checkOut }}
           />
           <TextField
             label="Number of guests"

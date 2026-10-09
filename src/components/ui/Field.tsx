@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
+import type { ComponentProps, InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { cn } from "@/lib/utils/format";
 
 type Common = { label: string; name: string; error?: string[]; hint?: ReactNode; className?: string; optional?: boolean };
@@ -29,7 +29,7 @@ function describedBy(id: string, error?: string[], hint?: ReactNode) {
   return error?.length ? `${id}-error` : hint ? `${id}-hint` : undefined;
 }
 
-export function TextField({ label, name, error, hint, className, optional, ...props }: Common & InputHTMLAttributes<HTMLInputElement>) {
+export function TextField({ label, name, error, hint, className, optional, ...props }: Common & ComponentProps<"input">) {
   const id = props.id ?? `f-${name}`;
   return (
     <Wrapper id={id} label={label} error={error} hint={hint} className={className} optional={optional}>
