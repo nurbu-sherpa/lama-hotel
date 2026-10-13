@@ -126,6 +126,8 @@ export function AdminSidebar({ counts }: { counts: { bookings: number; messages:
         type="button"
         onClick={() => setOpen(true)}
         className="fixed top-3 left-3 z-40 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-forest-900 text-white lg:hidden"
+        // Own view-transition layer, so the admin header's snapshot can't cover it during page changes.
+        style={{ viewTransitionName: "admin-menu-button" }}
         aria-label={newCount > 0 ? `Open admin menu (${newCount} new)` : "Open admin menu"}
         aria-expanded={open}
       >
