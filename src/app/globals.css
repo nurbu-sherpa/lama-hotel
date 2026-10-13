@@ -316,28 +316,21 @@
 ::view-transition-group(site-header),
 ::view-transition-group(mobile-cta),
 ::view-transition-group(admin-header),
-::view-transition-group(admin-sidebar),
-::view-transition-group(admin-menu-button) {
+::view-transition-group(admin-sidebar) {
   animation: none;
   z-index: 100;
 }
 ::view-transition-old(site-header),
 ::view-transition-old(mobile-cta),
 ::view-transition-old(admin-header),
-::view-transition-old(admin-sidebar),
-::view-transition-old(admin-menu-button) {
+::view-transition-old(admin-sidebar) {
   display: none;
 }
 ::view-transition-new(site-header),
 ::view-transition-new(mobile-cta),
 ::view-transition-new(admin-header),
-::view-transition-new(admin-sidebar),
-::view-transition-new(admin-menu-button) {
+::view-transition-new(admin-sidebar) {
   animation: none;
-}
-/* The mobile menu button floats above the admin header, as it does outside transitions. */
-::view-transition-group(admin-menu-button) {
-  z-index: 101;
 }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(*),
