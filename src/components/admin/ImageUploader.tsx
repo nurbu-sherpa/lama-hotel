@@ -85,14 +85,14 @@ export function ImageUploader({ name = "file", label = "Image", required = false
             accept(f);
           }}
           className={cn(
-            "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-4 text-center text-sm text-muted transition-all duration-200 focus-within:border-forest-500",
+            "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 text-center text-sm text-muted transition-colors duration-150 focus-within:border-forest-500",
             dragging
-              ? "scale-[1.01] border-clay-500 bg-clay-50 shadow-[0_0_0_4px_rgb(214_162_61/0.25),0_0_32px_rgb(214_162_61/0.45)]"
+              ? "border-clay-500 bg-clay-50"
               : "border-cream-300 bg-cream-50 hover:border-forest-300",
           )}
         >
           {dragging ? (
-            <UploadCloud size={36} className="animate-bounce text-clay-600" aria-hidden />
+            <UploadCloud size={36} className="text-clay-600" aria-hidden />
           ) : preview || currentUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- local blob preview
             <img src={preview ?? currentUrl} alt="Selected image preview" className="max-h-48 rounded-lg object-contain" />

@@ -23,7 +23,7 @@ export async function MobileCtaBar() {
           <WhatsAppIcon size={20} />
           WhatsApp
         </a>
-        <Link href="/booking" prefetch className={`${item} m-1.5 rounded-lg bg-linear-to-b from-clay-600 to-clay-700 text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.22),0_4px_12px_-6px_rgb(161_98_7/0.7)] transition-[scale,box-shadow] duration-150 active:scale-[0.96] active:from-clay-700 active:shadow-[inset_0_3px_8px_rgb(0_0_0/0.3)] active:duration-75`}>
+        <Link href="/booking" prefetch className={`${item} m-1.5 rounded-md bg-clay-600 text-white transition-colors duration-150 active:bg-clay-700`}>
           <CalendarCheck size={20} aria-hidden />
           Check Availability
         </Link>

@@ -26,7 +26,7 @@ export function Modal({ open, onClose, title, children }: { open: boolean; onClo
       {open && (
         <div className="p-6">
           <div className="flex items-start justify-between gap-4">
-            <h2 id={titleId} className="font-display text-xl font-semibold text-forest-900">
+            <h2 id={titleId} className="text-lg font-semibold text-forest-900">
               {title}
             </h2>
             <button type="button" onClick={onClose} aria-label="Close" className="rounded-md p-1 text-muted hover:bg-cream-100">

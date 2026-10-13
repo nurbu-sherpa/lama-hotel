@@ -77,10 +77,10 @@ export default async function DashboardPage() {
           <li key={s.label}>
             <Link
               href={s.href}
-              className={`block h-full rounded-lg border p-5 transition duration-300 hover:-translate-y-0.5 hover:border-forest-300 hover:shadow-[0_12px_28px_-14px_rgb(14_26_49/0.3)] ${s.highlight ? "border-clay-300 bg-clay-50" : "border-cream-200 bg-white"}`}
+              className={`block h-full rounded-lg border p-5 shadow-xs transition-colors duration-150 hover:border-forest-300 ${s.highlight ? "border-amber-300 bg-amber-50" : "border-cream-200 bg-white hover:bg-cream-50"}`}
             >
               <p className="text-sm text-muted">{s.label}</p>
-              <p className="mt-1 font-display text-3xl font-semibold text-forest-900">{s.value}</p>
+              <p className="mt-1 text-3xl font-semibold tracking-tight text-forest-900 tabular-nums">{s.value}</p>
             </Link>
           </li>
         ))}

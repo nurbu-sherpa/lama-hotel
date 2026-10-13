@@ -216,7 +216,7 @@ function Month({
 
   return (
     <div className={className}>
-      <p className="mb-2 text-center font-display text-lg font-semibold text-forest-900">{label}</p>
+      <p className="mb-2 text-center text-base font-semibold text-forest-900">{label}</p>
       <div className="grid grid-cols-7 text-center text-xs font-semibold tracking-wide text-muted uppercase">
         {WEEKDAYS.map((w) => (
           <span key={w} className="py-1.5">

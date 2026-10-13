@@ -54,13 +54,11 @@
   @keyframes lightbox-in {
     from {
       opacity: 0;
-      transform: translateX(calc(var(--dir, 0) * 48px)) scale(0.97);
-      filter: blur(6px);
+      transform: translateX(calc(var(--dir, 0) * 32px));
     }
     to {
       opacity: 1;
       transform: none;
-      filter: none;
     }
   }
 }
@@ -178,7 +176,7 @@
   @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
 }
 @utility eyebrow {
-  @apply text-[0.72rem] font-semibold tracking-[0.2em] text-clay-700 uppercase;
+  @apply text-xs font-semibold tracking-[0.12em] text-clay-700 uppercase;
 }
 @utility heading-section {
   @apply font-display text-[2rem] leading-[1.1] font-medium tracking-tight text-forest-900 sm:text-[2.6rem];
@@ -195,18 +193,17 @@
 
 @utility btn {
   /* Tailwind v4 moves elements with the `translate`/`scale` properties, so those must be in the transition list. */
-  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 py-2.5 text-[0.95rem] font-semibold tracking-[0.01em] transition-[background-color,border-color,color,translate,scale,box-shadow] duration-200 ease-out select-none active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60;
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 py-2.5 text-[0.95rem] font-semibold transition-colors duration-150 ease-out select-none disabled:cursor-not-allowed disabled:opacity-60;
 }
-/* Gold call-to-action: soft top highlight + warm glow at rest, lifts on hover,
-   presses in when clicked (moves down, shrinks slightly, shadow turns inward). Text stays ≥ 4.5:1. */
+/* Gold call-to-action: flat and solid; darkens on hover and press. White text stays ≥ 4.5:1. */
 @utility btn-primary {
-  @apply btn rounded-lg bg-clay-600 bg-linear-to-b from-clay-600 to-clay-700 text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.22),0_6px_16px_-8px_rgb(161_98_7/0.75)] hover:-translate-y-0.5 hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.25),0_14px_28px_-12px_rgb(161_98_7/0.85)] active:translate-y-px active:scale-[0.97] active:from-clay-700 active:to-clay-700 active:shadow-[inset_0_3px_8px_rgb(0_0_0/0.3)] active:duration-75;
+  @apply btn bg-clay-600 text-white shadow-xs hover:bg-clay-700 active:bg-clay-700;
 }
 @utility btn-dark {
-  @apply btn bg-forest-800 text-white hover:bg-forest-900;
+  @apply btn bg-forest-800 text-white shadow-xs hover:bg-forest-900;
 }
 @utility btn-outline {
-  @apply btn border border-forest-900/25 bg-transparent text-forest-900 hover:border-forest-900/50 hover:bg-white;
+  @apply btn border border-cream-300 bg-white text-forest-900 shadow-xs hover:border-forest-900/30 hover:bg-cream-50;
 }
 @utility btn-ghost-light {
   @apply btn border border-white/55 bg-transparent text-white hover:border-white hover:bg-white/10;
@@ -219,7 +216,7 @@
 /* ── Surfaces ──────────────────────────────────────────── */
 
 @utility card {
-  @apply rounded-lg border border-cream-200 bg-white;
+  @apply rounded-lg border border-cream-200 bg-white shadow-xs;
 }
 @utility panel-quiet {
   @apply rounded-lg border border-cream-300/70 bg-cream-100/60;
@@ -475,8 +472,6 @@
 @keyframes splash-name {
   from {
     opacity: 0;
-    letter-spacing: 0.25em;
-    filter: blur(6px);
   }
 }
 @keyframes splash-bar {
@@ -502,8 +497,8 @@ body[data-splash="off"] {
   --splash-delay: 0s;
 }
 .hero-in {
-  animation: hero-rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  animation-delay: calc(var(--splash-delay) + var(--d, 0) * 90ms);
+  animation: hero-rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--splash-delay) + var(--d, 0) * 60ms);
 }
 .hero-zoom {
   animation: hero-zoom 2.2s var(--splash-delay) cubic-bezier(0.2, 0.7, 0.2, 1) both;
@@ -511,13 +506,12 @@ body[data-splash="off"] {
 @keyframes hero-rise {
   from {
     opacity: 0;
-    transform: translateY(18px);
-    filter: blur(6px);
+    transform: translateY(10px);
   }
 }
 @keyframes hero-zoom {
   from {
-    transform: scale(1.12);
+    transform: scale(1.04);
   }
 }
 
@@ -573,27 +567,13 @@ body[data-splash="off"] {
   }
 }
 
-/* ── Admin: panels and dashboard cards ease in on every page (staggered within each row) ── */
+/* ── Admin is a work tool: content appears almost immediately (short fade, no stagger/blur/scale) ── */
 .admin-main section,
 .admin-stagger > * {
-  animation: admin-in 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-.admin-main :is(section, .admin-stagger > *):nth-child(2) {
-  animation-delay: 70ms;
-}
-.admin-main :is(section, .admin-stagger > *):nth-child(3) {
-  animation-delay: 140ms;
-}
-.admin-main :is(section, .admin-stagger > *):nth-child(4) {
-  animation-delay: 210ms;
-}
-.admin-main :is(section, .admin-stagger > *):nth-child(n + 5) {
-  animation-delay: 280ms;
+  animation: admin-in 0.18s ease-out both;
 }
 @keyframes admin-in {
   from {
     opacity: 0;
-    transform: translateY(16px) scale(0.985);
-    filter: blur(4px);
   }
 }

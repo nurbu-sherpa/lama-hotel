@@ -7,9 +7,9 @@ import { cn } from "@/lib/utils/format";
 
 export function AdminPageTitle({ title, description, actions }: { title: string; description?: ReactNode; actions?: ReactNode }) {
   return (
-    <div className="mb-6 flex animate-fade-up flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <h1 className="font-display text-3xl font-medium text-forest-900">{title}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-forest-900">{title}</h1>
         {description && <p className="mt-1 max-w-2xl text-sm text-muted">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
@@ -19,8 +19,8 @@ export function AdminPageTitle({ title, description, actions }: { title: string;
 
 export function Panel({ title, description, children, className }: { title?: string; description?: ReactNode; children: ReactNode; className?: string }) {
   return (
-    <section className={cn("rounded-lg border border-cream-200 bg-white p-5 sm:p-6", className)}>
-      {title && <h2 className="text-lg font-semibold text-forest-900">{title}</h2>}
+    <section className={cn("rounded-lg border border-cream-200 bg-white p-5 shadow-xs sm:p-6", className)}>
+      {title && <h2 className="text-base font-semibold text-forest-900">{title}</h2>}
       {description && <p className="mt-1 text-sm text-muted">{description}</p>}
       <div className={title || description ? "mt-5" : undefined}>{children}</div>
     </section>
@@ -117,10 +117,10 @@ export type Column<T> = { header: string; cell: (row: T) => ReactNode; className
 export function DataTable<T>({ rows, columns, rowKey, rowHref, caption }: { rows: T[]; columns: Column<T>[]; rowKey: (r: T) => string; rowHref?: (r: T) => string; caption: string }) {
   return (
     <>
-      <div className="relative hidden overflow-x-auto rounded-lg border border-cream-200 bg-white md:block">
+      <div className="relative hidden overflow-x-auto rounded-lg border border-cream-200 bg-white shadow-xs md:block">
         <table className="w-full text-left text-sm">
           <caption className="sr-only">{caption}</caption>
-          <thead className="border-b border-cream-200 bg-cream-50 text-xs tracking-wider text-muted uppercase">
+          <thead className="border-b border-cream-200 bg-cream-50 text-xs font-medium text-muted">
             <tr>
               {columns.map((c) => (
                 <th key={c.header} scope="col" className={cn("px-4 py-3 font-semibold", c.className)}>
@@ -150,7 +150,7 @@ export function DataTable<T>({ rows, columns, rowKey, rowHref, caption }: { rows
       </div>
       <ul className="space-y-3 md:hidden" aria-label={caption}>
         {rows.map((r) => (
-          <li key={rowKey(r)} className="rounded-xl border border-cream-200 bg-white p-4">
+          <li key={rowKey(r)} className="rounded-lg border border-cream-200 bg-white p-4 shadow-xs">
             {rowHref ? (
               <Link href={rowHref(r)} className="block">
                 <MobileRow row={r} columns={columns} />

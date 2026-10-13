@@ -15,8 +15,8 @@ import { useEffect } from "react";
  * nothing flashes. Disabled for prefers-reduced-motion and when the APIs are unavailable.
  */
 const KEYFRAMES: Keyframe[] = [
-  { opacity: 0, transform: "translateY(24px)", filter: "blur(6px)" },
-  { opacity: 1, transform: "none", filter: "none" },
+  { opacity: 0, transform: "translateY(12px)" },
+  { opacity: 1, transform: "none" },
 ];
 
 export function ScrollReveal() {

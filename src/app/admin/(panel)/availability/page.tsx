@@ -124,7 +124,7 @@ export default async function AvailabilityPage({ searchParams }: PageProps<"/adm
               ].map(([k, v]) => (
                 <div key={k} className="rounded-xl bg-cream-50 py-2">
                   <dt className="text-xs text-muted">{k}</dt>
-                  <dd className="font-display text-2xl font-semibold text-forest-900">{v}</dd>
+                  <dd className="text-2xl font-semibold tracking-tight text-forest-900 tabular-nums">{v}</dd>
                 </div>
               ))}
             </dl>
