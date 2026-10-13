@@ -29,7 +29,7 @@ export default async function AdminPanelLayout({ children }: { children: React.R
     <AdminShell>
       <div className="min-w-0 lg:pl-72">
         <AdminSidebar counts={{ bookings, messages }} />
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-end gap-3 border-b border-cream-200 bg-white px-4 sm:px-6" style={{ viewTransitionName: "admin-header" }}>
+        <header className="admin-header sticky top-0 z-30 flex h-16 items-center justify-end gap-3 px-4 sm:px-6" style={{ viewTransitionName: "admin-header" }}>
           <AdminMenuButton newCount={bookings + messages} />
           {/* The front-desk action is always one click away. */}
           <Link
