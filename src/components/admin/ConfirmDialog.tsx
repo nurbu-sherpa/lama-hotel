@@ -41,7 +41,7 @@ export function ConfirmDialog({
         title={triggerLabel ? undefined : title}
         className={
           triggerClassName ??
-          "inline-flex min-h-10 items-center gap-2 rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-50"
+          "btn-danger-outline btn-sm"
         }
       >
         {icon}
@@ -53,7 +53,7 @@ export function ConfirmDialog({
           {Object.entries(fields).map(([k, v]) => (
             <input key={k} type="hidden" name={k} value={v} />
           ))}
-          <button type="button" onClick={() => setOpen(false)} className="min-h-10 rounded-lg border border-cream-300 px-4 text-sm font-semibold hover:bg-cream-100">
+          <button type="button" onClick={() => setOpen(false)} className="btn-outline btn-sm">
             Cancel
           </button>
           <SubmitButton variant="danger">{confirmLabel}</SubmitButton>

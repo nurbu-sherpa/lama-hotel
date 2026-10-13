@@ -18,7 +18,7 @@ export default async function AdminRoomsPage() {
         title="Rooms"
         description={`${total} rooms in ${rooms.length} types. Changing a price here updates the whole website immediately.`}
         actions={
-          <Link href="/admin/rooms/new" className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-forest-800 px-4 text-sm font-semibold text-white hover:bg-forest-900">
+          <Link href="/admin/rooms/new" className="btn-primary btn-sm">
             <Plus size={16} aria-hidden /> Add room type
           </Link>
         }
@@ -45,7 +45,7 @@ export default async function AdminRoomsPage() {
               </div>
               <div className="flex items-center gap-2">
                 <MoveButtons action={moveRoom} id={r.id} isFirst={i === 0} isLast={i === rooms.length - 1} label={r.name} />
-                <Link href={`/admin/rooms/${r.id}`} className="inline-flex min-h-9 items-center rounded-lg border border-cream-300 px-3 text-sm font-semibold hover:bg-cream-100">
+                <Link href={`/admin/rooms/${r.id}`} className="btn-outline btn-sm">
                   Edit
                 </Link>
               </div>

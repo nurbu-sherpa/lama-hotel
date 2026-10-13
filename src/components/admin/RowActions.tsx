@@ -6,7 +6,7 @@ import { AdminForm } from "./AdminForm";
 
 type Action = (prev: ActionState, fd: FormData) => Promise<ActionState>;
 
-const btn = "inline-flex h-9 w-9 items-center justify-center rounded-lg border border-cream-300 bg-white text-ink hover:bg-cream-100 disabled:opacity-30";
+const btn = "btn-outline btn-sm btn-icon";
 
 /** Up/down buttons — simpler than drag-and-drop for a non-technical owner, and keyboard accessible. */
 export function MoveButtons({ action, id, isFirst, isLast, label }: { action: Action; id: string; isFirst: boolean; isLast: boolean; label: string }) {
@@ -29,7 +29,7 @@ export function ToggleButton({ action, id, active, label }: { action: Action; id
       <input type="hidden" name="id" value={id} />
       <button
         type="submit"
-        className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-cream-300 bg-white px-3 text-sm font-medium hover:bg-cream-100"
+        className="btn-outline btn-sm"
         aria-label={active ? `Hide ${label} from website` : `Show ${label} on website`}
       >
         {active ? <EyeOff size={15} aria-hidden /> : <Eye size={15} aria-hidden />}

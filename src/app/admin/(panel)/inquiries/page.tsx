@@ -66,7 +66,7 @@ export default async function InquiriesPage({ searchParams }: PageProps<"/admin/
             <input id="q" name="q" defaultValue={q} placeholder="Search name, email, phone" className="peer field-input !py-2 pr-10" />
             <SearchClear q={q} clearHref={`/admin/inquiries?status=${filter}`} />
           </div>
-          <button type="submit" className="rounded-lg bg-forest-800 px-4 text-sm font-semibold text-white">
+          <button type="submit" className="btn-dark">
             Search
           </button>
         </form>

@@ -55,7 +55,7 @@ export function GalleryGrid({ images, categories }: Props) {
                   width={800}
                   height={600}
                   sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                  className="h-auto w-full transition-transform duration-[900ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover:scale-[1.06]"
+                  className="h-auto w-full transition-transform duration-(--dur-slow) ease-smooth group-hover:scale-[1.03]"
                 />
                 <span
                   className={cn(

@@ -82,16 +82,12 @@ export function AdminForm({
 
 export function SubmitButton({ children = "Save changes", className, variant = "primary" }: { children?: ReactNode; className?: string; variant?: "primary" | "danger" | "outline" }) {
   const pending = useContext(PendingContext);
-  const styles = {
-    primary: "bg-forest-800 text-white hover:bg-forest-900",
-    danger: "bg-red-700 text-white hover:bg-red-800",
-    outline: "border border-cream-300 bg-white text-ink hover:bg-cream-100",
-  };
+  const styles = { primary: "btn-dark", danger: "btn-danger", outline: "btn-outline" };
   return (
     <button
       type="submit"
       disabled={pending}
-      className={cn("inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:opacity-60", styles[variant], className)}
+      className={cn(styles[variant], "btn-sm", className)}
     >
       {pending && <Loader2 size={16} className="animate-spin" aria-hidden />}
       {children}

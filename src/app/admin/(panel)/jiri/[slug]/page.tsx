@@ -30,7 +30,7 @@ export default async function EditGuidePage({ params }: PageProps<"/admin/jiri/[
       <AdminPageTitle
         title={page.title}
         actions={
-          <a href={PATHS[slug]} target="_blank" className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-cream-300 bg-white px-3 text-sm font-semibold hover:bg-cream-100">
+          <a href={PATHS[slug]} target="_blank" className="btn-outline btn-sm">
             View page <ExternalLink size={14} aria-hidden />
           </a>
         }

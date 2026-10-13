@@ -70,7 +70,7 @@ export default async function ReservationsPage({ searchParams }: PageProps<"/adm
         description="Bookings from walk-ins, phone, WhatsApp and converted website inquiries."
         actions={
           // "New Reservation" lives in the admin header on every page; avoid duplicating it here.
-          <Link href="/admin/availability" className="inline-flex min-h-11 items-center gap-2 rounded-md border border-cream-300 bg-white px-4 text-sm font-semibold hover:bg-cream-100">
+          <Link href="/admin/availability" className="btn-outline">
             <CalendarRange size={17} aria-hidden /> Availability
           </Link>
         }
@@ -98,7 +98,7 @@ export default async function ReservationsPage({ searchParams }: PageProps<"/adm
             <input id="q" name="q" defaultValue={q} placeholder="Search name, phone, email" className="peer field-input !py-2 pr-10" />
             <SearchClear q={q} clearHref={`/admin/reservations?view=${filter}`} />
           </div>
-          <button type="submit" className="rounded-lg bg-forest-800 px-4 text-sm font-semibold text-white">
+          <button type="submit" className="btn-dark">
             Search
           </button>
         </form>
@@ -109,7 +109,7 @@ export default async function ReservationsPage({ searchParams }: PageProps<"/adm
           title="No reservations here"
           description="Use “New Reservation” for walk-in, phone or WhatsApp bookings."
           action={
-            <Link href="/admin/reservations/new" className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-clay-600 px-4 text-sm font-semibold text-white">
+            <Link href="/admin/reservations/new" className="btn-primary btn-sm">
               <Plus size={16} aria-hidden /> New Reservation
             </Link>
           }

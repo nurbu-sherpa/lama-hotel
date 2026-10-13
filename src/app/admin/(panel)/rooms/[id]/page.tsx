@@ -35,7 +35,7 @@ export default async function EditRoomPage({ params, searchParams }: PageProps<"
         title={room.name}
         description={sp.created ? "Room created. You can now add photos below." : undefined}
         actions={
-          <a href={`/rooms/${room.slug}`} target="_blank" className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-cream-300 bg-white px-3 text-sm font-semibold hover:bg-cream-100">
+          <a href={`/rooms/${room.slug}`} target="_blank" className="btn-outline btn-sm">
             View on website <ExternalLink size={14} aria-hidden />
           </a>
         }

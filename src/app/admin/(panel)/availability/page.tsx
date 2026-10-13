@@ -52,7 +52,7 @@ export default async function AvailabilityPage({ searchParams }: PageProps<"/adm
         title="Availability"
         description="Calculated from reservations in the database. Confirmed, pending, checked-in and checked-out stays hold rooms; cancelled and no-show don't."
         actions={
-          <Link href={`/admin/reservations/new?date=${from}`} className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-clay-600 px-5 text-base font-semibold text-white hover:bg-clay-700">
+          <Link href={`/admin/reservations/new?date=${from}`} className="btn-primary">
             <Plus size={18} aria-hidden /> New Reservation
           </Link>
         }
@@ -72,7 +72,7 @@ export default async function AvailabilityPage({ searchParams }: PageProps<"/adm
             </label>
             <input id="to" name="to" type="date" defaultValue={to} className="field-input" required />
           </div>
-          <button type="submit" className="min-h-11 rounded-lg bg-forest-800 px-4 text-sm font-semibold text-white">
+          <button type="submit" className="btn-dark">
             Show
           </button>
           <div className="flex flex-wrap gap-1.5">

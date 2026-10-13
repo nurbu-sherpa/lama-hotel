@@ -32,7 +32,7 @@ export default async function AdminPanelLayout({ children }: { children: React.R
         {/* The front-desk action is always one click away. */}
         <Link
           href="/admin/reservations/new"
-          className="mr-auto inline-flex min-h-10 items-center gap-2 rounded-md bg-clay-600 px-4 text-sm font-semibold text-white hover:bg-clay-700 lg:mr-0"
+          className="btn-primary btn-sm mr-auto lg:mr-0"
         >
           <Plus size={17} aria-hidden /> New Reservation
         </Link>

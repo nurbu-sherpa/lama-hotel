@@ -44,7 +44,7 @@ export function SectionHeading({
           )}
         >
           {action.label}
-          <ArrowRight size={17} aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5" />
+          <ArrowRight size={17} aria-hidden className="transition-transform duration-(--dur-base) ease-smooth group-hover:translate-x-0.5" />
         </Link>
       )}
     </div>

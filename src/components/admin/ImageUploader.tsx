@@ -85,7 +85,7 @@ export function ImageUploader({ name = "file", label = "Image", required = false
             accept(f);
           }}
           className={cn(
-            "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 text-center text-sm text-muted transition-colors duration-150 focus-within:border-forest-500",
+            "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 text-center text-sm text-muted transition-colors duration-(--dur-fast) focus-within:border-forest-500",
             dragging
               ? "border-clay-500 bg-clay-50"
               : "border-cream-300 bg-cream-50 hover:border-forest-300",

@@ -25,7 +25,7 @@ export default async function HomepageAdmin() {
         title="Homepage"
         description="Edit the text and images on the homepage. Rooms, prices and facilities come from their own sections automatically."
         actions={
-          <a href="/" target="_blank" className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-cream-300 bg-white px-3 text-sm font-semibold hover:bg-cream-100">
+          <a href="/" target="_blank" className="btn-outline btn-sm">
             View homepage <ExternalLink size={14} aria-hidden />
           </a>
         }

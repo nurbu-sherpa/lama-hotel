@@ -23,7 +23,7 @@ export function NavLinks({ items }: { items: { href: string; label: string }[] }
               className={cn(
                 "relative inline-flex min-h-11 items-center px-3 text-[0.98rem] font-medium transition-colors",
                 // Understated active indicator: a short underline, not a filled pill.
-                "after:absolute after:inset-x-3 after:bottom-2 after:h-px after:origin-left after:bg-clay-600 after:transition-transform after:duration-200",
+                "after:absolute after:inset-x-3 after:bottom-2 after:h-px after:origin-left after:bg-clay-600 after:transition-transform after:duration-(--dur-base) ease-smooth",
                 active ? "text-forest-900 after:scale-x-100" : "text-ink/70 after:scale-x-0 hover:text-forest-900 hover:after:scale-x-100",
               )}
             >

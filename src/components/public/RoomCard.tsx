@@ -45,7 +45,7 @@ export function RoomCard({
             alt=""
             fill
             sizes="(min-width: 768px) 50vw, 100vw"
-            className="object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover:scale-[1.06]"
+            className="object-cover transition-transform duration-(--dur-slow) ease-smooth group-hover:scale-[1.03]"
           />
         ) : (
           <RoomPhotoPlaceholder roomName={room.name} className="h-full w-full" />

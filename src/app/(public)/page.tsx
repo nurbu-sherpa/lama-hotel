@@ -246,7 +246,7 @@ export default async function HomePage() {
                 <li key={a.key} className="reveal group">
                   <Link href={`/jiri/things-to-do#s-${a.key}`} className="block">
                     <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-cream-200">
-                      <Image src={a.imageUrl} alt={a.imageAlt} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover:scale-[1.06]" />
+                      <Image src={a.imageUrl} alt={a.imageAlt} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover transition-transform duration-(--dur-slow) ease-smooth group-hover:scale-[1.03]" />
                       <span className="absolute top-3 left-3 rounded-sm bg-white/90 px-2 py-0.5 text-xs font-semibold text-forest-900">Jiri area</span>
                     </div>
                     <h3 className="mt-5 font-display text-2xl font-medium text-forest-900 group-hover:text-clay-700">{a.heading}</h3>
@@ -281,7 +281,7 @@ export default async function HomePage() {
               {galleryPicks.map((img, i) => (
                 <li key={img.id} className={`relative overflow-hidden rounded-md bg-cream-200 ${i === 0 ? "col-span-2 aspect-[4/3] lg:row-span-2 lg:aspect-auto" : "aspect-square"}`}>
                   <Link href="/gallery" aria-label={`${img.title} — open gallery`} className="group relative block h-full">
-                    <Image src={img.url} alt={img.alt} fill sizes={i === 0 ? "(min-width: 1024px) 50vw, 100vw" : "(min-width: 1024px) 25vw, 50vw"} className="object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover:scale-[1.06]" />
+                    <Image src={img.url} alt={img.alt} fill sizes={i === 0 ? "(min-width: 1024px) 50vw, 100vw" : "(min-width: 1024px) 25vw, 50vw"} className="object-cover transition-transform duration-(--dur-slow) ease-smooth group-hover:scale-[1.03]" />
                     <span className="absolute bottom-2 left-2 rounded-sm bg-black/55 px-2 py-0.5 text-[0.7rem] font-medium text-white">
                       {img.isHotelPhoto ? "At the lodge" : img.title}
                     </span>

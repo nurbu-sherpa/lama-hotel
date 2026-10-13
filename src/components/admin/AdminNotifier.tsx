@@ -200,7 +200,7 @@ export function AdminNotifier({ initialCount, initialClearedAt }: { initialCount
                 <p className="text-xs text-muted">Updates every 15 seconds</p>
               </div>
               {visible.length > 0 && (
-                <button type="button" onClick={clearAll} className="inline-flex min-h-9 items-center rounded-md px-2.5 text-sm font-semibold text-clay-700 hover:bg-cream-100">
+                <button type="button" onClick={clearAll} className="btn-ghost btn-sm">
                   Clear all
                 </button>
               )}

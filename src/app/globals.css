@@ -37,11 +37,16 @@
   --color-ink: #1b2433;
   --color-muted: #4f5b6b;
 
-  --animate-fade-up: fade-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  /* Motion tokens — every transition/animation uses these so the whole site moves with one rhythm.
+     Arriving: decelerate (smooth). Leaving: accelerate (exit), and faster than arriving. */
+  --ease-smooth: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  --animate-fade-up: fade-up var(--dur-enter) var(--ease-smooth) both;
   @keyframes fade-up {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(6px);
     }
     to {
       opacity: 1;
@@ -50,7 +55,7 @@
   }
 
   /* Lightbox image change: slides in from the side it was navigated from (--dir: -1 | 0 | 1). */
-  --animate-lightbox-in: lightbox-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-lightbox-in: lightbox-in var(--dur-enter) var(--ease-smooth) both;
   @keyframes lightbox-in {
     from {
       opacity: 0;
@@ -68,34 +73,29 @@
 .lightbox,
 .lightbox::backdrop {
   transition:
-    opacity 0.22s ease-in,
-    backdrop-filter 0.22s ease-in,
-    overlay 0.22s allow-discrete,
-    display 0.22s allow-discrete;
+    opacity var(--dur-base) var(--ease-exit),
+    overlay var(--dur-base) allow-discrete,
+    display var(--dur-base) allow-discrete;
   opacity: 0;
 }
 .lightbox[open],
 .lightbox[open]::backdrop {
-  transition-duration: 0.35s;
-  transition-timing-function: ease-out;
+  transition-duration: var(--dur-enter);
+  transition-timing-function: var(--ease-smooth);
 }
 .lightbox::backdrop {
-  background: rgb(14 26 49 / 0.88);
-  backdrop-filter: blur(0);
+  background: rgb(14 26 49 / 0.92);
 }
 .lightbox[open],
 .lightbox[open]::backdrop {
   opacity: 1;
 }
-.lightbox[open]::backdrop {
-  backdrop-filter: blur(14px);
-}
 .lightbox .lightbox-panel {
-  transition: transform 0.22s ease-in;
-  transform: scale(0.94) translateY(12px);
+  transition: transform var(--dur-base) var(--ease-exit);
+  transform: scale(0.97);
 }
 .lightbox[open] .lightbox-panel {
-  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: transform var(--dur-enter) var(--ease-smooth);
   transform: none;
 }
 @starting-style {
@@ -103,12 +103,16 @@
   .lightbox[open]::backdrop {
     opacity: 0;
   }
-  .lightbox[open]::backdrop {
-    backdrop-filter: blur(0);
-  }
   .lightbox[open] .lightbox-panel {
-    transform: scale(0.94) translateY(12px);
+    transform: scale(0.97);
   }
+}
+
+:root {
+  --dur-fast: 120ms; /* hover, press, colour changes */
+  --dur-base: 200ms; /* small UI: menus, toggles, exits */
+  --dur-enter: 320ms; /* panels, dialogs, content arriving */
+  --dur-slow: 500ms; /* large surfaces: hero, images */
 }
 
 @layer base {
@@ -189,28 +193,65 @@
   @apply border-cream-300/80;
 }
 
-/* ── Buttons ───────────────────────────────────────────── */
-
+/* ── Buttons ───────────────────────────────────────────
+   One look per role, used on the public site and in the admin:
+     btn-primary  gold   — the main booking/creating action (one per screen): Check Availability, Send Inquiry, New Reservation
+     btn-dark     navy   — confirm / save / submit (Save changes, Search, Log out)
+     btn-outline  white  — secondary actions (View room, Call, Cancel)
+     btn-danger   red    — destructive confirm (Delete) · btn-danger-outline: the trigger that opens it
+     btn-ghost    text   — quiet tertiary actions (Clear, Close)
+     btn-ghost-light     — outline on dark/photo backgrounds
+   Sizes: default 44px (touch-friendly) · add `btn-sm` for 40px in dense admin rows · `btn-icon` for square icon buttons.
+   Sizes use variables, so `btn-sm` never fights the variant classes. */
 @utility btn {
-  /* Tailwind v4 moves elements with the `translate`/`scale` properties, so those must be in the transition list. */
-  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 py-2.5 text-[0.95rem] font-semibold transition-colors duration-150 ease-out select-none disabled:cursor-not-allowed disabled:opacity-60;
+  min-height: var(--btn-h, 2.75rem);
+  padding-inline: var(--btn-px, 1.25rem);
+  font-size: var(--btn-fs, 0.95rem);
+  @apply inline-flex items-center justify-center gap-2 rounded-md py-2 leading-tight font-semibold whitespace-nowrap select-none;
+  transition-property: background-color, border-color, color, box-shadow, scale;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-smooth);
+  &:active:not(:disabled) {
+    scale: 0.98;
+  }
+  &:disabled,
+  &[aria-disabled="true"] {
+    @apply cursor-not-allowed opacity-50;
+  }
 }
-/* Gold call-to-action: flat and solid; darkens on hover and press. White text stays ≥ 4.5:1. */
+@utility btn-sm {
+  --btn-h: 2.5rem;
+  --btn-px: 1rem;
+  --btn-fs: 0.875rem;
+}
+@utility btn-icon {
+  --btn-px: 0;
+  @apply aspect-square;
+}
 @utility btn-primary {
   @apply btn bg-clay-600 text-white shadow-xs hover:bg-clay-700 active:bg-clay-700;
 }
 @utility btn-dark {
-  @apply btn bg-forest-800 text-white shadow-xs hover:bg-forest-900;
+  @apply btn bg-forest-800 text-white shadow-xs hover:bg-forest-900 active:bg-forest-950;
 }
 @utility btn-outline {
-  @apply btn border border-cream-300 bg-white text-forest-900 shadow-xs hover:border-forest-900/30 hover:bg-cream-50;
+  @apply btn border border-cream-300 bg-white text-forest-900 shadow-xs hover:border-forest-300 hover:bg-cream-50 active:bg-cream-100;
+}
+@utility btn-danger {
+  @apply btn bg-red-700 text-white shadow-xs hover:bg-red-800 active:bg-red-800;
+}
+@utility btn-danger-outline {
+  @apply btn border border-red-200 bg-white text-red-700 shadow-xs hover:border-red-300 hover:bg-red-50;
+}
+@utility btn-ghost {
+  @apply btn text-muted hover:bg-cream-100 hover:text-ink active:bg-cream-200;
 }
 @utility btn-ghost-light {
-  @apply btn border border-white/55 bg-transparent text-white hover:border-white hover:bg-white/10;
+  @apply btn border border-white/55 text-white hover:border-white hover:bg-white/10;
 }
 /* Quiet text link with an underline that strengthens on hover. */
 @utility link-quiet {
-  @apply font-semibold text-forest-800 underline decoration-clay-400/70 decoration-1 underline-offset-[5px] transition-colors hover:text-clay-700 hover:decoration-clay-600;
+  @apply font-semibold text-forest-800 underline decoration-clay-400/70 decoration-1 underline-offset-[5px] transition-colors duration-(--dur-fast) hover:text-clay-700 hover:decoration-clay-600;
 }
 
 /* ── Surfaces ──────────────────────────────────────────── */
@@ -228,7 +269,7 @@
   @apply mb-1.5 block text-[0.95rem] font-semibold text-ink;
 }
 @utility field-input {
-  @apply block min-h-12 w-full rounded-md border border-cream-300 bg-white px-3.5 py-2.5 text-base text-ink placeholder:text-muted/60 transition-colors hover:border-forest-300 focus:border-forest-600 focus:ring-2 focus:ring-forest-500/25 focus:outline-none aria-[invalid=true]:border-red-600 aria-[invalid=true]:ring-red-600/15;
+  @apply block min-h-12 w-full rounded-md border border-cream-300 bg-white px-3.5 py-2.5 text-base text-ink placeholder:text-muted/60 transition-[border-color,box-shadow] duration-(--dur-fast) hover:border-forest-300 focus:border-forest-600 focus:ring-2 focus:ring-forest-500/25 focus:outline-none aria-[invalid=true]:border-red-600 aria-[invalid=true]:ring-red-600/15;
 }
 @utility field-error {
   @apply mt-1.5 text-sm font-medium text-red-700;
@@ -251,10 +292,10 @@
   animation: none;
 }
 ::view-transition-old(.page-exit) {
-  animation: 160ms ease-in both vt-fade-out;
+  animation: var(--dur-fast) var(--ease-exit) both vt-fade-out;
 }
 ::view-transition-new(.page-enter) {
-  animation: 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 100ms both vt-rise;
+  animation: var(--dur-enter) var(--ease-smooth) 60ms both vt-rise;
 }
 @keyframes vt-fade-out {
   to {
@@ -264,7 +305,7 @@
 @keyframes vt-rise {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -310,8 +351,8 @@
       block-size: 0;
       overflow-y: clip;
       transition:
-        block-size 0.25s ease,
-        content-visibility 0.25s allow-discrete;
+        block-size var(--dur-base) var(--ease-smooth),
+        content-visibility var(--dur-base) allow-discrete;
     }
     details[open]::details-content {
       block-size: auto;
@@ -427,7 +468,7 @@
 }
 /* Route loading: appear only if the wait is noticeable. */
 .page-loading {
-  animation: vt-rise 0.4s 0.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: vt-rise var(--dur-enter) 0.2s var(--ease-smooth) both;
 }
 
 /* ── First-visit splash: logo draws in, then the curtain lifts to reveal the page ── */
@@ -497,11 +538,11 @@ body[data-splash="off"] {
   --splash-delay: 0s;
 }
 .hero-in {
-  animation: hero-rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: hero-rise var(--dur-slow) var(--ease-smooth) both;
   animation-delay: calc(var(--splash-delay) + var(--d, 0) * 60ms);
 }
 .hero-zoom {
-  animation: hero-zoom 2.2s var(--splash-delay) cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: hero-zoom 1.6s var(--splash-delay) var(--ease-smooth) both;
 }
 @keyframes hero-rise {
   from {
@@ -515,18 +556,26 @@ body[data-splash="off"] {
   }
 }
 
-/* ── Header gains depth once the page scrolls (scroll-driven, no JS) ── */
+/* ── Header gains a soft shadow once the page scrolls (scroll-driven, no JS).
+   Only the opacity of a separate shadow layer animates, so scrolling stays smooth. ── */
+.site-header::after {
+  content: "";
+  position: absolute;
+  inset: 100% 0 auto;
+  height: 12px;
+  background: linear-gradient(rgb(14 26 49 / 0.08), transparent);
+  opacity: 0;
+  pointer-events: none;
+}
 @supports (animation-timeline: scroll()) {
-  .site-header {
-    animation: header-lift linear both;
+  .site-header::after {
+    animation: header-shadow linear both;
     animation-timeline: scroll();
-    animation-range: 0 120px;
+    animation-range: 0 80px;
   }
-  @keyframes header-lift {
+  @keyframes header-shadow {
     to {
-      background-color: rgb(250 250 247 / 0.82);
-      box-shadow: 0 10px 30px -14px rgb(14 26 49 / 0.25);
-      backdrop-filter: blur(12px);
+      opacity: 1;
     }
   }
 }
@@ -570,7 +619,7 @@ body[data-splash="off"] {
 /* ── Admin is a work tool: content appears almost immediately (short fade, no stagger/blur/scale) ── */
 .admin-main section,
 .admin-stagger > * {
-  animation: admin-in 0.18s ease-out both;
+  animation: admin-in var(--dur-base) var(--ease-smooth) both;
 }
 @keyframes admin-in {
   from {

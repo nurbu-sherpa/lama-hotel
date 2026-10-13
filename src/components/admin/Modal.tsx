@@ -29,7 +29,7 @@ export function Modal({ open, onClose, title, children }: { open: boolean; onClo
             <h2 id={titleId} className="text-lg font-semibold text-forest-900">
               {title}
             </h2>
-            <button type="button" onClick={onClose} aria-label="Close" className="rounded-md p-1 text-muted hover:bg-cream-100">
+            <button type="button" onClick={onClose} aria-label="Close" className="btn-ghost btn-sm btn-icon -mt-2 -mr-2">
               <X size={20} aria-hidden />
             </button>
           </div>
