@@ -1,3 +1,4 @@
+import { SearchClear } from "@/components/admin/SearchClear";
 import Link from "next/link";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
@@ -61,7 +62,10 @@ export default async function InquiriesPage({ searchParams }: PageProps<"/admin/
           <label htmlFor="q" className="sr-only">
             Search inquiries
           </label>
-          <input id="q" name="q" defaultValue={q} placeholder="Search name, email, phone" className="field-input !py-2" />
+          <div className="relative">
+            <input id="q" name="q" defaultValue={q} placeholder="Search name, email, phone" className="peer field-input !py-2 pr-10" />
+            <SearchClear q={q} clearHref={`/admin/inquiries?status=${filter}`} />
+          </div>
           <button type="submit" className="rounded-lg bg-forest-800 px-4 text-sm font-semibold text-white">
             Search
           </button>
