@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { createContext, use, useState } from "react";
 import {
   BedDouble,
   BookOpenCheck,
@@ -69,15 +69,47 @@ const GROUPS = [
   },
 ];
 
-export function AdminSidebar({ counts }: { counts: { bookings: number; messages: number } }) {
+/** Mobile menu open/closed, shared by the sidebar and the menu button that lives in the header. */
+const MenuContext = createContext<{ open: boolean; setOpen: (open: boolean) => void }>({ open: false, setOpen: () => {} });
+
+export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const newCount = counts.bookings + counts.messages;
   const [lastPath, setLastPath] = useState(pathname);
   if (pathname !== lastPath) {
     setLastPath(pathname);
     setOpen(false);
   }
+  return <MenuContext value={{ open, setOpen }}>{children}</MenuContext>;
+}
+
+/**
+ * Mobile "☰" button. It sits inside the header as a normal item (not position: fixed), so it always
+ * paints with the header — no z-index or view-transition layering can hide it on reload or navigation.
+ */
+export function AdminMenuButton({ newCount }: { newCount: number }) {
+  const { open, setOpen } = use(MenuContext);
+  return (
+    <button
+      type="button"
+      onClick={() => setOpen(true)}
+      className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-forest-900 text-white lg:hidden"
+      aria-label={newCount > 0 ? `Open admin menu (${newCount} new)` : "Open admin menu"}
+      aria-expanded={open}
+    >
+      <Menu size={20} aria-hidden />
+      {newCount > 0 && (
+        <span aria-hidden className="absolute -top-1.5 -right-1.5 min-w-5 rounded-full bg-amber-400 px-1.5 text-center text-xs leading-5 font-semibold text-amber-950">
+          {newCount}
+        </span>
+      )}
+    </button>
+  );
+}
+
+export function AdminSidebar({ counts }: { counts: { bookings: number; messages: number } }) {
+  const pathname = usePathname();
+  const { open, setOpen } = use(MenuContext);
 
   const nav = (
     <nav aria-label="Admin" className="space-y-5">
@@ -122,22 +154,6 @@ export function AdminSidebar({ counts }: { counts: { bookings: number; messages:
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="fixed top-3 left-3 z-40 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-forest-900 text-white lg:hidden"
-        // Own view-transition layer, so the admin header's snapshot can't cover it during page changes.
-        style={{ viewTransitionName: "admin-menu-button" }}
-        aria-label={newCount > 0 ? `Open admin menu (${newCount} new)` : "Open admin menu"}
-        aria-expanded={open}
-      >
-        <Menu size={20} aria-hidden />
-        {newCount > 0 && (
-          <span aria-hidden className="absolute -top-1.5 -right-1.5 min-w-5 rounded-full bg-amber-400 px-1.5 text-center text-xs leading-5 font-semibold text-amber-950">
-            {newCount}
-          </span>
-        )}
-      </button>
       {open && <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={() => setOpen(false)} aria-hidden />}
       <aside
         style={{ viewTransitionName: "admin-sidebar" }}
