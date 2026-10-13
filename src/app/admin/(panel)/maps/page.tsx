@@ -5,13 +5,13 @@ import { AdminForm, SubmitButton } from "@/components/admin/AdminForm";
 import { AText, ATextArea } from "@/components/admin/Fields";
 import { AdminPageTitle, Panel } from "@/components/admin/ui";
 
-export const metadata = { title: "Google Maps" };
+export const metadata = { title: "Location & Maps" };
 
 export default async function MapsPage() {
   const h = await prisma.hotelSettings.findUniqueOrThrow({ where: { id: "default" } });
   return (
     <>
-      <AdminPageTitle title="Google Maps" description="Controls every “Get Directions” button and the map on the Location page." />
+      <AdminPageTitle title="Location & Maps" description="Controls every “Get Directions” button and the map on the Location page." />
       <AdminForm action={updateMapsSettings} className="space-y-6">
         <Panel title="Directions link">
           <AText label="Google Maps link" name="googleMapsUrl" type="url" required defaultValue={h.googleMapsUrl} hint="In Google Maps: open your hotel → Share → Copy link." />

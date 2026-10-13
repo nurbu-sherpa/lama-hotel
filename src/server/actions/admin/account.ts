@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { signIn, signOut } from "@/auth";
 import { prisma } from "@/lib/db";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth-guards";
 import { accountSchema, notificationSettingsSchema, passwordChangeSchema } from "@/lib/validation/schemas";
 import { sendTestEmail } from "@/lib/notify";
 import { adminMutation, readForm, type ActionState } from "./helpers";

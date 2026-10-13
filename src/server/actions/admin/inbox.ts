@@ -36,7 +36,7 @@ export async function deleteBookingInquiry(_p: ActionState, fd: FormData) {
     refresh();
     return "Inquiry deleted.";
   }, noRevalidate);
-  if (result.ok) redirect("/admin/bookings");
+  if (result.ok) redirect("/admin/inquiries");
   return result;
 }
 

@@ -39,39 +39,74 @@ export function EmptyState({ title, description, action }: { title: string; desc
 }
 
 
-const BADGE: Record<string, string> = {
-  NEW: "bg-clay-100 text-clay-700",
-  CONTACTED: "bg-amber-100 text-amber-800",
-  CONFIRMED: "bg-forest-100 text-forest-800",
-  CANCELLED: "bg-stone-200 text-stone-700",
-  COMPLETED: "bg-sky-100 text-sky-800",
-  READ: "bg-amber-100 text-amber-800",
-  REPLIED: "bg-forest-100 text-forest-800",
-  ARCHIVED: "bg-stone-200 text-stone-700",
-  AVAILABLE: "bg-forest-100 text-forest-800",
-  LIMITED: "bg-amber-100 text-amber-800",
-  FULLY_BOOKED: "bg-red-100 text-red-800",
-  INQUIRY: "bg-cream-200 text-ink",
-  PENDING: "bg-amber-100 text-amber-800",
-  CHECKED_IN: "bg-forest-700 text-white",
-  CHECKED_OUT: "bg-sky-100 text-sky-800",
-  NO_SHOW: "bg-stone-200 text-stone-700",
-  UNPAID: "bg-clay-100 text-clay-700",
-  PARTIAL: "bg-amber-100 text-amber-800",
-  PAID: "bg-forest-100 text-forest-800",
-  REFUNDED: "bg-stone-200 text-stone-700",
-  UNAVAILABLE: "bg-stone-200 text-stone-700",
+/**
+ * Status colours — the single source of truth for every status badge in the admin.
+ * One colour = one meaning; visual weight = how much attention it needs.
+ * Emerald is used for status meaning only; `forest` stays the brand colour.
+ */
+const TONES = {
+  urgent: "bg-amber-100 text-amber-900 font-semibold", // needs action now
+  waiting: "bg-amber-50 text-amber-800 font-medium", // awaiting / in progress
+  upcoming: "bg-blue-50 text-blue-700 font-medium", // confirmed, all set
+  active: "bg-emerald-700 text-white font-medium", // happening right now (the only solid badge)
+  good: "bg-emerald-50 text-emerald-700 font-medium", // healthy / free
+  warning: "bg-orange-50 text-orange-700 font-medium", // problem worth noticing
+  bad: "bg-red-50 text-red-700 font-medium", // cancelled / blocked
+  done: "bg-slate-100 text-slate-600 font-medium", // finished
+  off: "bg-slate-200 text-slate-700 font-medium", // disabled
+} as const;
+
+export type Tone = keyof typeof TONES;
+
+const STATUS_TONE: Record<string, Tone> = {
+  // Inquiries & messages
+  NEW: "urgent",
+  CONTACTED: "waiting",
+  READ: "waiting",
+  COMPLETED: "done",
+  REPLIED: "done",
+  ARCHIVED: "done",
+  // Reservations
+  INQUIRY: "waiting",
+  PENDING: "waiting",
+  CONFIRMED: "upcoming",
+  CHECKED_IN: "active",
+  CHECKED_OUT: "done",
+  CANCELLED: "bad",
+  NO_SHOW: "warning",
+  // Payment
+  UNPAID: "waiting",
+  PARTIAL: "warning",
+  PAID: "good",
+  REFUNDED: "done",
+  // Room availability
+  AVAILABLE: "good",
+  LIMITED: "warning",
+  FULLY_BOOKED: "bad",
+  UNAVAILABLE: "off",
 };
+
+/** " checked-in " → "CHECKED_IN" */
+const normalizeStatus = (status: string) => status.trim().toUpperCase().replace(/[\s-]+/g, "_");
+
+/** Tone for a status (case/spacing-insensitive). Unknown statuses are "done". */
+export function toneFor(status: string) {
+  const tone = STATUS_TONE[normalizeStatus(status)] ?? "done";
+  return { tone, badge: TONES[tone] };
+}
+
+/** Status → badge classes (derived from the tones; kept for existing imports). */
+export const BADGE: Record<string, string> = Object.fromEntries(Object.keys(STATUS_TONE).map((s) => [s, toneFor(s).badge]));
 
 export function statusLabel(status: string) {
   const s = status.replace(/_/g, " ").toLowerCase();
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-export function StatusBadge({ status }: { status: string }) {
+export function StatusBadge({ status, label, className }: { status: string; label?: string; className?: string }) {
   return (
-    <span className={cn("inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold", BADGE[status] ?? "bg-cream-200 text-ink")}>
-      {statusLabel(status)}
+    <span className={cn("inline-flex shrink-0 items-center rounded-md px-2 py-0.5 text-xs leading-5 whitespace-nowrap", toneFor(status).badge, className)}>
+      {label ?? statusLabel(normalizeStatus(status))}
     </span>
   );
 }

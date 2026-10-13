@@ -1,6 +1,6 @@
 import { BellRing, CheckCircle2, Mail, XCircle } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth-guards";
 import { storageMode } from "@/lib/storage";
 import { emailProvider } from "@/lib/notify";
 import { changePassword, sendTestNotification, updateAccount, updateNotificationSettings } from "@/server/actions/admin/account";

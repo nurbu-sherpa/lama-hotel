@@ -18,7 +18,7 @@ const LABELS: Record<(typeof FILTERS)[number], string> = {
   ALL: "All",
 };
 
-export default async function BookingsPage({ searchParams }: PageProps<"/admin/bookings">) {
+export default async function InquiriesPage({ searchParams }: PageProps<"/admin/inquiries">) {
   const sp = await searchParams;
   const filter = (FILTERS as readonly string[]).includes(String(sp.status)) ? (sp.status as (typeof FILTERS)[number]) : "OPEN";
   const q = typeof sp.q === "string" ? sp.q.trim().slice(0, 100) : "";
@@ -48,7 +48,7 @@ export default async function BookingsPage({ searchParams }: PageProps<"/admin/b
           {FILTERS.map((f) => (
             <Link
               key={f}
-              href={`/admin/bookings?status=${f}${q ? `&q=${encodeURIComponent(q)}` : ""}`}
+              href={`/admin/inquiries?status=${f}${q ? `&q=${encodeURIComponent(q)}` : ""}`}
               aria-current={filter === f ? "page" : undefined}
               className={cn("shrink-0 rounded-full px-3.5 py-1.5 text-sm font-medium", filter === f ? "bg-forest-800 text-white" : "bg-white text-ink hover:bg-cream-100")}
             >
@@ -75,7 +75,7 @@ export default async function BookingsPage({ searchParams }: PageProps<"/admin/b
           caption="Booking inquiries"
           rows={rows}
           rowKey={(r) => r.id}
-          rowHref={(r) => `/admin/bookings/${r.id}`}
+          rowHref={(r) => `/admin/inquiries/${r.id}`}
           columns={[
             { header: "Guest", cell: (r) => r.name },
             { header: "Dates", cell: (r) => `${formatDate(r.checkIn)} → ${formatDate(r.checkOut)} (${nightsBetween(r.checkIn, r.checkOut)}n)` },

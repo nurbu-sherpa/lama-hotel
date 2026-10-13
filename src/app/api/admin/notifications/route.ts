@@ -1,4 +1,4 @@
-import { getAdmin } from "@/lib/auth";
+import { getAdmin } from "@/lib/auth-guards";
 import { prisma } from "@/lib/db";
 import { formatDate } from "@/lib/utils/format";
 
@@ -44,7 +44,7 @@ export async function GET() {
       type: "booking" as const,
       title: `Booking inquiry — ${b.name}`,
       detail: `${b.numberOfRooms} × ${b.roomType} · ${formatDate(b.checkIn)} → ${formatDate(b.checkOut)} · ${b.guests} guests`,
-      href: `/admin/bookings/${b.id}`,
+      href: `/admin/inquiries/${b.id}`,
       createdAt: b.createdAt.toISOString(),
       unread: b.status === "NEW",
     })),

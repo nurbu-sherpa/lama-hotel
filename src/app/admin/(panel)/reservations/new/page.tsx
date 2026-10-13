@@ -73,7 +73,7 @@ export default async function NewReservationPage({ searchParams }: PageProps<"/a
           <Inbox size={18} className="mt-0.5 shrink-0" aria-hidden />
           <span>
             Details copied from the website inquiry by <strong>{inquiry.name}</strong>. The original inquiry is kept unchanged and linked to this reservation.{" "}
-            <Link href={`/admin/bookings/${inquiry.id}`} className="underline">
+            <Link href={`/admin/inquiries/${inquiry.id}`} className="underline">
               View inquiry
             </Link>
           </span>

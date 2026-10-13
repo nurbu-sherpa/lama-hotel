@@ -101,7 +101,7 @@ export default async function ReservationPage({ params, searchParams }: PageProp
             {r.inquiry && (
               <>
                 {" · "}
-                <Link href={`/admin/bookings/${r.inquiry.id}`} className="underline">
+                <Link href={`/admin/inquiries/${r.inquiry.id}`} className="underline">
                   From website inquiry
                 </Link>
               </>

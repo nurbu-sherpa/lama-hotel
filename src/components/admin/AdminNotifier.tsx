@@ -178,7 +178,7 @@ export function AdminNotifier({ initialCount, initialClearedAt }: { initialCount
         >
           {count ? <BellRing size={20} aria-hidden /> : <Bell size={20} aria-hidden />}
           {count > 0 && (
-            <span className="absolute top-0.5 right-0.5 min-w-5 rounded-full bg-clay-600 px-1 text-center text-[0.68rem] leading-5 font-bold text-white" aria-hidden>
+            <span className="absolute top-0.5 right-0.5 min-w-5 rounded-full bg-amber-400 px-1 text-center text-[0.68rem] leading-5 font-bold text-amber-950" aria-hidden>
               {count > 99 ? "99+" : count}
             </span>
           )}
@@ -221,7 +221,7 @@ export function AdminNotifier({ initialCount, initialClearedAt }: { initialCount
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center gap-2 text-sm font-semibold text-forest-900">
-                          {i.unread && <span className="h-2 w-2 shrink-0 rounded-full bg-clay-600" aria-label="New" />}
+                          {i.unread && <span className="h-2 w-2 shrink-0 rounded-full bg-amber-500" aria-label="New" />}
                           <span className="truncate">{i.title}</span>
                         </span>
                         <span className="block truncate text-xs text-muted">{i.detail}</span>
@@ -258,7 +258,7 @@ export function AdminNotifier({ initialCount, initialClearedAt }: { initialCount
                 </button>
               )}
               {desktop === "granted" && <span className="text-xs text-forest-700">Desktop alerts on</span>}
-              <Link href="/admin/bookings" onClick={() => setOpen(false)} className="ml-auto inline-flex min-h-9 items-center font-semibold text-clay-700">
+              <Link href="/admin/inquiries" onClick={() => setOpen(false)} className="ml-auto inline-flex min-h-9 items-center font-semibold text-clay-700">
                 All inquiries →
               </Link>
             </div>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth-guards";
 import { prisma } from "@/lib/db";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { LogoutButton } from "@/components/admin/LogoutButton";

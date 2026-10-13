@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Camera, ImagePlus, Link2, Sparkles } from "lucide-react";
 import { addDays, getCategoryAvailability, toDate } from "@/lib/availability";
 import { prisma } from "@/lib/db";
-import { formatDate, formatDateTime, todayInNepal } from "@/lib/utils/format";
+import { cn, formatDate, formatDateTime, todayInNepal } from "@/lib/utils/format";
 import { AdminPageTitle, EmptyState, Panel, StatusBadge, statusLabel } from "@/components/admin/ui";
 
 export const metadata = { title: "Dashboard" };
@@ -52,7 +52,7 @@ export default async function DashboardPage() {
     { label: "Check-outs today", value: departures.length, href: "/admin/reservations?view=departures", highlight: departures.some((r) => r.status === "CHECKED_IN") },
     { label: "Rooms occupied / reserved tonight", value: `${occupiedTonight} / ${totalRooms}`, href: "/admin/availability" },
     { label: "Rooms available tonight", value: availableTonight, href: "/admin/availability" },
-    { label: "Pending website inquiries", value: pendingInquiries, href: "/admin/bookings?status=OPEN", highlight: pendingInquiries > 0 },
+    { label: "Pending website inquiries", value: pendingInquiries, href: "/admin/inquiries?status=OPEN", highlight: pendingInquiries > 0 },
     { label: "Upcoming confirmed reservations", value: upcomingConfirmed, href: "/admin/reservations" },
   ];
 
@@ -98,7 +98,7 @@ export default async function DashboardPage() {
               <ul className="divide-y divide-cream-100">
                 {block.rows.map((r) => (
                   <li key={r.id}>
-                    <Link href={`/admin/reservations/${r.id}`} className="flex items-center justify-between gap-3 py-3 hover:bg-cream-50">
+                    <Link href={`/admin/reservations/${r.id}`} className={cn("flex items-start justify-between gap-3 py-3 hover:bg-cream-50", r.status === "CANCELLED" && "opacity-60")}>
                       <div className="min-w-0">
                         <p className="truncate font-medium text-forest-900">{r.guestName}</p>
                         <p className="text-xs text-muted">{r.assignments.length ? r.assignments.map((a) => a.roomUnit.name).join(", ") : `${r.numberOfRooms} × ${r.roomType} — no room assigned`}</p>
@@ -115,11 +115,14 @@ export default async function DashboardPage() {
         <Panel title="Rooms tonight" className="lg:col-span-2">
           <ul className="grid gap-3 sm:grid-cols-2">
             {tonight.map((c) => (
-              <li key={c.roomId} className="flex flex-col gap-1.5 rounded-md bg-cream-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-                <span className="font-medium text-forest-900">{c.name}</span>
-                <span className="flex flex-wrap items-center gap-2 text-sm">
-                  {c.booked} booked · {c.available} of {c.total} available <StatusBadge status={c.status} />
-                </span>
+              <li key={c.roomId} className="flex items-start justify-between gap-3 rounded-md bg-cream-50 px-4 py-3">
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-forest-900">{c.name}</p>
+                  <p className="text-sm text-muted">
+                    {c.booked} booked · {c.available} of {c.total} available
+                  </p>
+                </div>
+                <StatusBadge status={c.status} />
               </li>
             ))}
           </ul>
@@ -135,7 +138,7 @@ export default async function DashboardPage() {
             <ul className="divide-y divide-cream-100">
               {recentReservations.map((r) => (
                 <li key={r.id}>
-                  <Link href={`/admin/reservations/${r.id}`} className="flex items-center justify-between gap-3 py-3 hover:bg-cream-50">
+                  <Link href={`/admin/reservations/${r.id}`} className={cn("flex items-start justify-between gap-3 py-3 hover:bg-cream-50", r.status === "CANCELLED" && "opacity-60")}>
                     <div className="min-w-0">
                       <p className="truncate font-medium text-forest-900">{r.guestName}</p>
                       <p className="text-xs text-muted">
@@ -159,7 +162,7 @@ export default async function DashboardPage() {
             <ul className="divide-y divide-cream-100">
               {recentInquiries.map((b) => (
                 <li key={b.id}>
-                  <Link href={`/admin/bookings/${b.id}`} className="flex items-center justify-between gap-3 py-3 hover:bg-cream-50">
+                  <Link href={`/admin/inquiries/${b.id}`} className={cn("flex items-start justify-between gap-3 py-3 hover:bg-cream-50", b.status === "CANCELLED" && "opacity-60")}>
                     <div className="min-w-0">
                       <p className="truncate font-medium text-forest-900">{b.name}</p>
                       <p className="text-xs text-muted">
@@ -172,7 +175,7 @@ export default async function DashboardPage() {
               ))}
             </ul>
           )}
-          <Link href="/admin/bookings" className="mt-3 inline-flex min-h-10 items-center gap-1 text-sm font-semibold text-clay-700">
+          <Link href="/admin/inquiries" className="mt-3 inline-flex min-h-10 items-center gap-1 text-sm font-semibold text-clay-700">
             All inquiries <ArrowRight size={14} aria-hidden />
           </Link>
         </Panel>
@@ -184,7 +187,7 @@ export default async function DashboardPage() {
             <ul className="divide-y divide-cream-100">
               {recentMessages.map((m) => (
                 <li key={m.id}>
-                  <Link href={`/admin/messages/${m.id}`} className="flex items-center justify-between gap-3 py-3 hover:bg-cream-50">
+                  <Link href={`/admin/messages/${m.id}`} className="flex items-start justify-between gap-3 py-3 hover:bg-cream-50">
                     <div className="min-w-0">
                       <p className="truncate font-medium text-forest-900">{m.name}</p>
                       <p className="truncate text-xs text-muted">

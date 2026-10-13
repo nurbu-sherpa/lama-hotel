@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth-guards";
 import { AVAILABILITY_TAG } from "@/config/site";
 import { busyUnits, computeCategoryAvailability, isDateStr, loadCategories, loadOccupying } from "@/lib/availability";
 import { reservationSchema, RESERVATION_STATUSES } from "@/lib/validation/schemas";

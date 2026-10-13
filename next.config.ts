@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "res.cloudinary.com" },
     ],
   },
+  async redirects() {
+    // Old name for the inquiries inbox — keeps bookmarks and old email links working.
+    return [{ source: "/admin/bookings/:path*", destination: "/admin/inquiries/:path*", permanent: true }];
+  },
   async headers() {
     return [
       {

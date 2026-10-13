@@ -5,7 +5,7 @@ import { AdminForm, SubmitButton } from "./AdminForm";
 import { AText } from "./Fields";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { MoveButtons } from "./RowActions";
-import { Panel } from "./ui";
+import { Panel, StatusBadge } from "./ui";
 
 /** Manage the individual physical rooms of one room type. */
 export function RoomUnitsPanel({ roomId, roomName, units }: { roomId: string; roomName: string; units: (RoomUnit & { _count: { assignments: number } })[] }) {
@@ -22,7 +22,7 @@ export function RoomUnitsPanel({ roomId, roomName, units }: { roomId: string; ro
             <div className="flex flex-wrap items-center gap-2">
               <p className="flex-1 font-semibold text-forest-900">
                 {u.name} <span className="ml-1 text-xs font-normal text-muted">{u.code}</span>
-                {!u.active && <span className="ml-2 rounded-full bg-stone-200 px-2 py-0.5 text-xs font-semibold text-stone-700">Out of service</span>}
+                {!u.active && <StatusBadge status="UNAVAILABLE" label="Out of service" className="ml-2 align-middle" />}
               </p>
               <MoveButtons action={moveRoomUnit} id={u.id} isFirst={i === 0} isLast={i === units.length - 1} label={u.name} />
               <AdminForm action={toggleRoomUnit}>

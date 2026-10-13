@@ -30,7 +30,7 @@ flowchart TB
   INQ["Booking Inquiry<br/>BookingInquiry<br/>(request — holds no room)"]:::impl
 
   subgraph ADMIN["Admin dashboard (Auth.js login · requireAdmin() on every action)"]
-    REVIEW["Review inquiry<br/>/admin/bookings/[id]<br/>→ Convert to reservation"]:::impl
+    REVIEW["Review inquiry<br/>/admin/inquiries/[id]<br/>→ Convert to reservation"]:::impl
     NEW["New Reservation<br/>/admin/reservations/new"]:::impl
     RES["Reservation<br/>status · payment status · amount · source"]:::impl
     ASSIGN["Room Assignment<br/>ReservationRoom → RoomUnit<br/>(Standard 1–6, Special 1–2)"]:::impl
@@ -205,4 +205,4 @@ erDiagram
 | One occupying reservation per physical room per night; a room type can't exceed its active rooms | `findConflicts()` inside a **serializable** transaction in `saveReservation()` |
 | Category inventory = number of active physical rooms (auto-synced) | `syncRoomTotals()`, room-unit actions, backfill migration |
 | Public availability = counts per room type only, behind an owner toggle (off by default) | `src/lib/data/availability.ts` |
-| Guest data only in authenticated admin pages (layout + every action call `requireAdmin()`; `/admin` is `noindex` and disallowed in robots.txt) | `src/lib/auth.ts`, `next.config.ts`, `src/app/robots.ts` |
+| Guest data only in authenticated admin pages (layout + every action call `requireAdmin()`; `/admin` is `noindex` and disallowed in robots.txt) | `src/lib/auth-guards.ts`, `next.config.ts`, `src/app/robots.ts` |

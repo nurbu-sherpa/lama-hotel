@@ -12,7 +12,7 @@ import {
   Hotel,
   Images,
   LayoutDashboard,
-  Map,
+  ExternalLink,
   MapPin,
   Menu,
   MessageSquare,
@@ -25,8 +25,16 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils/format";
 
+// Ordered by how often staff use each section: daily work first, setup last.
 const GROUPS = [
   { items: [{ href: "/admin/dashboard", label: "Dashboard", Icon: LayoutDashboard }] },
+  {
+    label: "Inbox",
+    items: [
+      { href: "/admin/inquiries", label: "Booking Inquiries", Icon: CalendarCheck, badge: "bookings" as const },
+      { href: "/admin/messages", label: "Contact Messages", Icon: MessageSquare, badge: "messages" as const },
+    ],
+  },
   {
     label: "Front desk",
     items: [
@@ -34,10 +42,11 @@ const GROUPS = [
       { href: "/admin/availability", label: "Availability", Icon: CalendarRange },
     ],
   },
-  { items: [{ href: "/admin/hotel", label: "Hotel Information", Icon: Hotel }] },
   {
-    label: "Rooms & photos",
+    label: "Property",
     items: [
+      { href: "/admin/hotel", label: "Hotel Information", Icon: Hotel },
+      { href: "/admin/maps", label: "Location & Maps", Icon: MapPin },
       { href: "/admin/rooms", label: "Rooms", Icon: BedDouble },
       { href: "/admin/facilities", label: "Facilities", Icon: Sparkles },
       { href: "/admin/gallery", label: "Gallery", Icon: Images },
@@ -52,16 +61,8 @@ const GROUPS = [
     ],
   },
   {
-    label: "Guests",
-    items: [
-      { href: "/admin/bookings", label: "Booking Inquiries", Icon: CalendarCheck, badge: "bookings" as const },
-      { href: "/admin/messages", label: "Contact Messages", Icon: MessageSquare, badge: "messages" as const },
-    ],
-  },
-  {
     label: "Setup",
     items: [
-      { href: "/admin/maps", label: "Google Maps", Icon: MapPin },
       { href: "/admin/seo", label: "SEO", Icon: Search },
       { href: "/admin/settings", label: "Settings", Icon: Settings },
     ],
@@ -71,6 +72,7 @@ const GROUPS = [
 export function AdminSidebar({ counts }: { counts: { bookings: number; messages: number } }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const newCount = counts.bookings + counts.messages;
   const [lastPath, setLastPath] = useState(pathname);
   if (pathname !== lastPath) {
     setLastPath(pathname);
@@ -99,7 +101,7 @@ export function AdminSidebar({ counts }: { counts: { bookings: number; messages:
                     <Icon size={18} aria-hidden />
                     <span className="flex-1">{label}</span>
                     {badge > 0 && (
-                      <span className="rounded-full bg-clay-500 px-2 py-0.5 text-xs font-semibold text-white" aria-label={`${badge} new`}>
+                      <span className="rounded-full bg-amber-400 px-2 py-0.5 text-xs font-semibold text-amber-950" aria-label={`${badge} new`}>
                         {badge}
                       </span>
                     )}
@@ -111,8 +113,8 @@ export function AdminSidebar({ counts }: { counts: { bookings: number; messages:
         </div>
       ))}
       <div className="border-t border-white/10 pt-4">
-        <a href="/" target="_blank" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-cream-100/75 hover:bg-white/6 hover:text-white">
-          <Map size={18} aria-hidden /> View website ↗
+        <a href="/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-cream-100/75 hover:bg-white/6 hover:text-white">
+          <ExternalLink size={18} aria-hidden /> View website
         </a>
       </div>
     </nav>
@@ -124,10 +126,15 @@ export function AdminSidebar({ counts }: { counts: { bookings: number; messages:
         type="button"
         onClick={() => setOpen(true)}
         className="fixed top-3 left-3 z-40 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-forest-900 text-white lg:hidden"
-        aria-label="Open admin menu"
+        aria-label={newCount > 0 ? `Open admin menu (${newCount} new)` : "Open admin menu"}
         aria-expanded={open}
       >
         <Menu size={20} aria-hidden />
+        {newCount > 0 && (
+          <span aria-hidden className="absolute -top-1.5 -right-1.5 min-w-5 rounded-full bg-amber-400 px-1.5 text-center text-xs leading-5 font-semibold text-amber-950">
+            {newCount}
+          </span>
+        )}
       </button>
       {open && <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={() => setOpen(false)} aria-hidden />}
       <aside

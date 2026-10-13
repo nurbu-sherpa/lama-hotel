@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { getAdmin } from "@/lib/auth";
+import { getAdmin } from "@/lib/auth-guards";
 import { LogoMark } from "@/components/public/Logo";
 import { LoginForm } from "./LoginForm";
 

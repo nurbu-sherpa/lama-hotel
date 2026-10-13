@@ -3,18 +3,14 @@ import { Plus } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { MAX_RANGE_NIGHTS, addDays, computeCategoryAvailability, eachNight, isDateStr, loadCategories, loadOccupying, roomsUsed } from "@/lib/availability";
 import { cn, formatDate, todayInNepal } from "@/lib/utils/format";
-import { AdminPageTitle, Panel, StatusBadge, statusLabel } from "@/components/admin/ui";
+import { AdminPageTitle, Panel, StatusBadge, statusLabel, toneFor } from "@/components/admin/ui";
 import { AdminForm, SubmitButton } from "@/components/admin/AdminForm";
 import { togglePublicAvailability } from "@/server/actions/admin/hotel";
 
 export const metadata = { title: "Availability" };
 
-const CELL: Record<string, string> = {
-  PENDING: "bg-amber-100 text-amber-900",
-  CONFIRMED: "bg-clay-100 text-clay-800",
-  CHECKED_IN: "bg-forest-700 text-white",
-  CHECKED_OUT: "bg-sky-100 text-sky-900",
-};
+/** Statuses shown in the grid legend (colours come from the shared status tones). */
+const LEGEND = ["PENDING", "CONFIRMED", "CHECKED_IN", "CHECKED_OUT", "AVAILABLE"];
 
 function shortDate(d: string) {
   const date = new Date(`${d}T00:00:00Z`);
@@ -116,8 +112,8 @@ export default async function AvailabilityPage({ searchParams }: PageProps<"/adm
       <ul className="mb-8 grid gap-3 sm:grid-cols-2">
         {summary.map((c) => (
           <li key={c.roomId} className="rounded-lg border border-cream-200 bg-white p-5">
-            <div className="flex items-center justify-between gap-2">
-              <p className="font-semibold text-forest-900">{c.name}</p>
+            <div className="flex items-start justify-between gap-3">
+              <p className="min-w-0 truncate font-semibold text-forest-900">{c.name}</p>
               <StatusBadge status={c.status} />
             </div>
             <dl className="mt-3 grid grid-cols-3 gap-2 text-center">
@@ -145,10 +141,10 @@ export default async function AvailabilityPage({ searchParams }: PageProps<"/adm
               <li key={u.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
                 <span className="w-32 shrink-0 font-semibold text-forest-900">{u.name}</span>
                 {!u.active ? (
-                  <span className="text-sm text-muted">Out of service</span>
+                  <StatusBadge status="UNAVAILABLE" label="Out of service" />
                 ) : r ? (
                   <Link href={`/admin/reservations/${r.id}`} className="flex flex-1 flex-wrap items-center gap-2 text-sm hover:underline">
-                    <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-semibold", CELL[r.status])}>{statusLabel(r.status)}</span>
+                    <StatusBadge status={r.status} />
                     <span className="font-medium">{r.guestName}</span>
                     <span className="text-muted">
                       {formatDate(r.checkIn)} → {formatDate(r.checkOut)}
@@ -156,7 +152,7 @@ export default async function AvailabilityPage({ searchParams }: PageProps<"/adm
                   </Link>
                 ) : (
                   <span className="flex flex-1 items-center justify-between gap-2">
-                    <span className="rounded-full bg-forest-50 px-2.5 py-0.5 text-xs font-semibold text-forest-800">Available</span>
+                    <StatusBadge status="AVAILABLE" />
                     <Link href={`/admin/reservations/new?date=${from}&unit=${u.id}`} className="text-sm font-semibold text-clay-700 hover:underline">
                       Book this room
                     </Link>
@@ -201,7 +197,7 @@ export default async function AvailabilityPage({ searchParams }: PageProps<"/adm
                           <Link
                             href={`/admin/reservations/${r.id}`}
                             title={`${r.guestName} · ${formatDate(r.checkIn)} → ${formatDate(r.checkOut)} · ${statusLabel(r.status)}`}
-                            className={cn("block truncate rounded px-1 py-1.5 text-center font-semibold", CELL[r.status])}
+                            className={cn("block truncate rounded px-1 py-1.5 text-center font-semibold", toneFor(r.status).badge)}
                           >
                             {r.checkIn === n || n === from ? r.guestName.split(" ")[0] : "•"}
                           </Link>
@@ -209,7 +205,7 @@ export default async function AvailabilityPage({ searchParams }: PageProps<"/adm
                           <Link
                             href={`/admin/reservations/new?date=${n}&unit=${u.id}`}
                             title={`${u.name} free on ${formatDate(n)} — click to book`}
-                            className="block rounded bg-forest-50 py-1.5 text-center text-forest-700 hover:bg-forest-100"
+                            className={cn("block rounded py-1.5 text-center hover:opacity-75", toneFor("AVAILABLE").badge)}
                           >
                             <span className="sr-only">Available</span>·
                           </Link>
@@ -224,14 +220,11 @@ export default async function AvailabilityPage({ searchParams }: PageProps<"/adm
         </div>
       )}
       <p className="mt-3 flex flex-wrap gap-3 text-xs text-muted">
-        {Object.entries(CELL).map(([s, c]) => (
+        {LEGEND.map((s) => (
           <span key={s} className="flex items-center gap-1.5">
-            <span className={cn("inline-block h-3 w-3 rounded", c)} /> {statusLabel(s)}
+            <span className={cn("inline-block h-3 w-3 rounded-sm ring-1 ring-black/10 ring-inset", toneFor(s).badge)} /> {statusLabel(s)}
           </span>
         ))}
-        <span className="flex items-center gap-1.5">
-          <span className="inline-block h-3 w-3 rounded bg-forest-50" /> Available
-        </span>
       </p>
 
       {unassigned.length > 0 && (

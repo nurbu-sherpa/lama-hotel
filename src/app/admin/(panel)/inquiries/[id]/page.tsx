@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Archive, ArchiveRestore, CalendarPlus, Mail, Phone } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { formatDate, formatDateTime, formatPrice, mailtoHref, nightsBetween, telHref, whatsappHref } from "@/lib/utils/format";
+import { cn, formatDate, formatDateTime, formatPrice, mailtoHref, nightsBetween, telHref, whatsappHref } from "@/lib/utils/format";
 import { deleteBookingInquiry, toggleArchiveBooking, updateBookingInquiry } from "@/server/actions/admin/inbox";
 import { AdminForm, SubmitButton } from "@/components/admin/AdminForm";
 import { ASelect, ATextArea } from "@/components/admin/Fields";
@@ -12,7 +12,7 @@ import { WhatsAppIcon } from "@/components/shared/icons";
 
 export const metadata = { title: "Booking inquiry" };
 
-export default async function BookingDetailPage({ params }: PageProps<"/admin/bookings/[id]">) {
+export default async function InquiryDetailPage({ params }: PageProps<"/admin/inquiries/[id]">) {
   const { id } = await params;
   if (!/^[0-9a-f-]{36}$/.test(id)) notFound();
   const b = await prisma.bookingInquiry.findUnique({
@@ -41,7 +41,7 @@ export default async function BookingDetailPage({ params }: PageProps<"/admin/bo
 
   return (
     <>
-      <Link href="/admin/bookings" className="inline-flex min-h-10 items-center text-sm font-semibold text-clay-700">
+      <Link href="/admin/inquiries" className="inline-flex min-h-10 items-center text-sm font-semibold text-clay-700">
         ← All inquiries
       </Link>
       <AdminPageTitle
@@ -110,8 +110,11 @@ export default async function BookingDetailPage({ params }: PageProps<"/admin/bo
               <ul className="mb-4 space-y-2 text-sm">
                 {b.reservations.map((res) => (
                   <li key={res.id}>
-                    <Link href={`/admin/reservations/${res.id}`} className="flex items-center justify-between gap-2 rounded-lg border border-cream-200 px-3 py-2 hover:bg-cream-50">
-                      <span>
+                    <Link
+                      href={`/admin/reservations/${res.id}`}
+                      className={cn("flex items-start justify-between gap-3 rounded-lg border border-cream-200 px-3 py-2 hover:bg-cream-50", res.status === "CANCELLED" && "opacity-60")}
+                    >
+                      <span className="min-w-0">
                         {res.roomType} · {formatDate(res.checkIn)} → {formatDate(res.checkOut)}
                       </span>
                       <StatusBadge status={res.status} />
