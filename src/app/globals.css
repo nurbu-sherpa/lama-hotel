@@ -341,6 +341,33 @@
   }
 }
 
+/* ── Admin header background ──
+   Desktop: always white. Phone: transparent at the top of the page, fades to white once you scroll
+   (scroll-driven, no JS; only the opacity of this layer animates). Browsers without scroll-driven
+   animations simply keep it white. */
+.admin-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #fff;
+  border-bottom: 1px solid var(--color-cream-200);
+}
+@media (width < 64rem) {
+  @supports (animation-timeline: scroll()) {
+    .admin-header::before {
+      animation: admin-header-bg linear both;
+      animation-timeline: scroll();
+      animation-range: 0 24px;
+    }
+  }
+}
+@keyframes admin-header-bg {
+  from {
+    opacity: 0;
+  }
+}
+
 /* Smooth accordion open/close where supported. */
 @layer base {
   @media (prefers-reduced-motion: no-preference) {
