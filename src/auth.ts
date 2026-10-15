@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { loginSchema } from "@/lib/validation/schemas";
 import { clientIpFrom, hashIp, passwordFingerprint } from "@/lib/security";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 // Lockouts are keyed on email + IP, so a stranger's wrong guesses can't lock the owner out.
 // The high per-email cap only trips under a large distributed (botnet) guessing attack.
@@ -17,6 +18,10 @@ class TooManyAttempts extends CredentialsSignin {
   code = "rate_limited";
 }
 
+class FailedHumanCheck extends CredentialsSignin {
+  code = "captcha";
+}
+
 // A real bcrypt hash of a random string — used so unknown emails take the same time as known ones.
 const DUMMY_HASH = "$2b$12$Hb4n65MdetB.078VGnMFrepGqSFxCwUyCKtQMrQkIVCTzNqzYCA5K";
 
@@ -26,12 +31,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: process.env.AUTH_TRUST_HOST === "true" || Boolean(process.env.VERCEL),
   providers: [
     Credentials({
-      credentials: { email: {}, password: {} },
+      credentials: { email: {}, password: {}, turnstile: {} },
       async authorize(raw, request) {
         const parsed = loginSchema.safeParse(raw);
         if (!parsed.success) return null;
         const { email, password } = parsed.data;
-        const ipHash = hashIp(clientIpFrom(request.headers));
+        const ip = clientIpFrom(request.headers);
+        const ipHash = hashIp(ip);
         const since = new Date(Date.now() - WINDOW_MS);
 
         const [ipFails, pairFails, emailFails] = await Promise.all([
@@ -40,6 +46,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           prisma.loginAttempt.count({ where: { email, success: false, createdAt: { gte: since } } }),
         ]);
         if (ipFails >= MAX_FAILED_PER_IP || pairFails >= MAX_FAILED_PER_EMAIL_AND_IP || emailFails >= MAX_FAILED_PER_EMAIL) throw new TooManyAttempts();
+        // Checked here, not in the login action, so a direct POST to /api/auth/callback/credentials can't skip it.
+        if (!(await verifyTurnstile(String(raw.turnstile ?? ""), ip))) throw new FailedHumanCheck();
 
         const user = await prisma.adminUser.findUnique({ where: { email } });
         const ok = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_HASH);

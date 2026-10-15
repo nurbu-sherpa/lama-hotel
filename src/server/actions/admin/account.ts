@@ -14,16 +14,22 @@ export async function login(_p: ActionState, fd: FormData): Promise<ActionState>
     await signIn("credentials", {
       email: String(fd.get("email") ?? ""),
       password: String(fd.get("password") ?? ""),
+      turnstile: String(fd.get("cf-turnstile-response") ?? ""),
       redirectTo: "/admin/dashboard",
     });
     return { ok: true, message: "" };
   } catch (err) {
     if (err instanceof AuthError) {
-      const rateLimited = "code" in err && (err as { code?: string }).code === "rate_limited";
+      const code = "code" in err ? (err as { code?: string }).code : undefined;
       return {
         ok: false,
         at: Date.now(),
-        message: rateLimited ? "Too many failed attempts. Please wait 15 minutes and try again." : "Incorrect email or password.",
+        message:
+          code === "rate_limited"
+            ? "Too many failed attempts. Please wait 15 minutes and try again."
+            : code === "captcha"
+              ? "Security check failed. Please complete it and try again."
+              : "Incorrect email or password.",
       };
     }
     throw err; // successful sign-in throws a redirect — let Next.js handle it

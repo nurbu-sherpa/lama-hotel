@@ -3,6 +3,7 @@
 import { startTransition, useActionState, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { login } from "@/server/actions/admin/account";
+import { Turnstile } from "@/components/forms/Turnstile";
 
 const INPUT =
   "w-full rounded-lg border border-cream-300 bg-white p-4 pe-12 text-sm shadow-sm focus:border-transparent focus:ring-2 focus:ring-forest-500 focus:outline-none";
@@ -79,6 +80,7 @@ export function LoginForm() {
           </button>
         </div>
       </div>
+      <Turnstile resetKey={state} />
       <button type="submit" disabled={pending} className="btn-dark w-full !rounded-lg">
         {pending && <Loader2 size={16} className="animate-spin" aria-hidden />}
         Log in
