@@ -68,6 +68,11 @@
   }
 }
 
+/* Any open modal <dialog> (lightbox, admin modals) freezes the page behind it. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
 /* ── Lightbox open / close (native <dialog>, CSS only) ─── */
 /* Durations on the closed state = exit (faster), on [open] = enter. */
 .lightbox,

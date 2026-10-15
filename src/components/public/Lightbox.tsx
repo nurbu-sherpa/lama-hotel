@@ -26,6 +26,8 @@ export function Lightbox({
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const [dir, setDir] = useState(0);
+  // Each photo's real width/height ratio, learned on load (4:3 until then).
+  const [ratios, setRatios] = useState<Record<string, number>>({});
   // Last shown image — kept so the content stays visible while the dialog animates closed.
   const [shown, setShown] = useState<{ img: LightboxImage; i: number } | null>(null);
   const open = index !== null;
@@ -42,6 +44,10 @@ export function Lightbox({
     setDir(step);
     onIndex((index! + step + images.length) % images.length);
   };
+  const jump = (t: number) => {
+    setDir(t > index! ? 1 : -1);
+    onIndex(t);
+  };
   const close = () => {
     setDir(0);
     onClose();
@@ -57,8 +63,18 @@ export function Lightbox({
     return () => window.removeEventListener("keydown", onKey);
   });
 
+  // Keep the active thumbnail centred in the strip.
+  const thumbs = useRef<HTMLUListElement>(null);
+  useEffect(() => {
+    const strip = thumbs.current;
+    const thumb = strip?.children[index ?? 0] as HTMLElement | undefined;
+    if (strip && thumb) strip.scrollTo({ left: thumb.offsetLeft - (strip.clientWidth - thumb.clientWidth) / 2, behavior: "smooth" });
+  }, [index]);
+
   const img = shown?.img;
   const i = shown?.i ?? 0;
+  const ratio = (img && ratios[img.url]) || 4 / 3;
+  const maxH = images.length > 1 ? "min(64dvh, 860px)" : "min(74dvh, 920px)";
 
   return (
     <dialog
@@ -92,7 +108,14 @@ export function Lightbox({
                 width={1600}
                 height={1200}
                 sizes="(min-width: 1024px) 1024px, 100vw"
-                className="h-auto max-h-[min(72vh,900px)] w-auto max-w-full rounded-lg object-contain shadow-2xl"
+                onLoad={(e) => {
+                  const { naturalWidth: w, naturalHeight: h } = e.currentTarget;
+                  if (w && h) setRatios((r) => (r[img.url] ? r : { ...r, [img.url]: w / h }));
+                }}
+                // As wide as the panel allows, unless the screen height is the limit — always in the photo's own
+                // ratio, so the frame (and its shadow and rounded corners) is exactly the photo.
+                style={{ width: `min(100%, calc(${maxH} * ${ratio}))`, height: "auto", aspectRatio: ratio }}
+                className="rounded-lg object-cover shadow-2xl"
               />
             </div>
             <figcaption className="mt-5 text-center text-sm text-cream-100">
@@ -102,6 +125,26 @@ export function Lightbox({
               {img.credit && <span className="mt-1 block text-xs text-cream-200/70">{img.credit}</span>}
             </figcaption>
           </figure>
+
+          {images.length > 1 && (
+            <ul ref={thumbs} aria-label="Choose an image" className="mt-4 flex w-full max-w-5xl gap-2 overflow-x-auto px-1 py-1 [scrollbar-width:none] justify-center-safe [&::-webkit-scrollbar]:hidden">
+              {images.map((t, n) => (
+                <li key={t.url + n} className="shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => jump(n)}
+                    aria-label={`Show image ${n + 1}: ${t.alt}`}
+                    aria-current={n === i}
+                    className={`relative block aspect-[4/3] w-14 overflow-hidden rounded-md transition sm:w-20 ${
+                      n === i ? "opacity-100 ring-2 ring-white" : "opacity-50 hover:opacity-90"
+                    }`}
+                  >
+                    <Image src={t.url} alt="" fill sizes="80px" className="object-cover" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
 
           {images.length > 1 && (
             <>
