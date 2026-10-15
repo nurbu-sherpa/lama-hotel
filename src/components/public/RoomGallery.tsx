@@ -121,7 +121,7 @@ export function RoomGallery({ roomName, images }: { roomName: string; images: Im
       </div>
 
       {many && (
-        <ul ref={thumbs} className="relative mt-3 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="Choose a photo">
+        <ul ref={thumbs} className="relative mt-3 flex gap-2 overflow-x-auto pt-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="Choose a photo">
           {images.map((img, i) => (
             <li key={img.id} className="shrink-0">
               <button
