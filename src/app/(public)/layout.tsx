@@ -4,7 +4,7 @@ import { MobileCtaBar } from "@/components/public/MobileCtaBar";
 import { LodgeLoader } from "@/components/public/LodgeLoader";
 import { ScrollToTop } from "@/components/public/ScrollToTop";
 import { ChatWidget } from "@/components/public/ChatWidget";
-import { isAiEnabled } from "@/lib/ai/client";
+import { chatOn, isAiEnabled } from "@/lib/ai/client";
 import { getHotel } from "@/lib/data/public";
 
 // Pages render per request from cached, tag-invalidated data, so owner edits appear immediately
@@ -16,6 +16,7 @@ const SPLASH_ONCE = `try{if(sessionStorage.getItem("lh-splash"))document.body.da
 
 export default async function PublicLayout({ children }: LayoutProps<"/">) {
   const hotel = isAiEnabled() ? await getHotel() : null;
+  const chat = chatOn(hotel);
   return (
     <>
       <script dangerouslySetInnerHTML={{ __html: SPLASH_ONCE }} />
@@ -31,7 +32,7 @@ export default async function PublicLayout({ children }: LayoutProps<"/">) {
       <Footer />
       <MobileCtaBar />
       <ScrollToTop />
-      {hotel && <ChatWidget name={hotel.name} phone={hotel.phone} whatsapp={hotel.whatsapp} />}
+      {chat && hotel && <ChatWidget name={hotel.name} phone={hotel.phone} whatsapp={hotel.whatsapp} />}
     </>
   );
 }

@@ -36,6 +36,7 @@ const DEFAULT_HOTEL = {
   youtubeUrl: "",
   notificationEmail: "",
   showPublicAvailability: false,
+  aiChatEnabled: true,
 };
 export type Hotel = typeof DEFAULT_HOTEL;
 

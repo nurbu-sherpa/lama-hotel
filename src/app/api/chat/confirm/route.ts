@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { isAiEnabled } from "@/lib/ai/client";
+import { getHotel } from "@/lib/data/public";
+import { chatOn } from "@/lib/ai/client";
 import { chatSessionOk, rateLimited, readDraft } from "@/lib/ai/inquiry-draft";
 import { currentIpHash, isSameOrigin } from "@/lib/security";
 import { createBookingInquiry } from "@/server/services/inquiries";
@@ -12,7 +13,7 @@ import { createBookingInquiry } from "@/server/services/inquiries";
 const json = (body: Record<string, unknown>, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 
 export async function POST(req: Request) {
-  if (!isAiEnabled()) return json({ error: "disabled" }, 404);
+  if (!chatOn(await getHotel())) return json({ error: "disabled" }, 404);
   if (!(await isSameOrigin())) return json({ error: "bad_request" }, 403);
   const ipHash = await currentIpHash();
   if (rateLimited(ipHash)) return json({ error: "rate_limited" }, 429);

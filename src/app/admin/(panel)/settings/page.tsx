@@ -1,4 +1,4 @@
-import { BellRing, CheckCircle2, Mail, XCircle } from "lucide-react";
+import { BellRing, Bot, CheckCircle2, Mail, XCircle } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth-guards";
 import { storageMode } from "@/lib/storage";
@@ -8,6 +8,8 @@ import { AdminForm, SubmitButton } from "@/components/admin/AdminForm";
 import { ACheckbox, APassword, AText } from "@/components/admin/Fields";
 import { AdminPageTitle, Panel } from "@/components/admin/ui";
 import { formatDateTime } from "@/lib/utils/format";
+import { isAiEnabled } from "@/lib/ai/client";
+import { toggleAiChat } from "@/server/actions/admin/hotel";
 
 export const metadata = { title: "Settings" };
 
@@ -30,7 +32,7 @@ export default async function SettingsPage() {
   const [hotel, logs] = await Promise.all([
     prisma.hotelSettings.findUniqueOrThrow({
       where: { id: "default" },
-      select: { email: true, notificationEmail: true, notifyEmail: true },
+      select: { email: true, notificationEmail: true, notifyEmail: true, aiChatEnabled: true },
     }),
     prisma.notificationLog.findMany({ orderBy: { createdAt: "desc" }, take: 10 }),
   ]);
@@ -40,6 +42,29 @@ export default async function SettingsPage() {
   return (
     <>
       <AdminPageTitle title="Settings" description="Your account, password, and how you are notified about new bookings." />
+
+      {/* ── AI chat ── */}
+      <Panel
+        title="AI chat assistant"
+        description={
+          !isAiEnabled()
+            ? "Not available: the AI keys are not set on the server (AI_CHAT_ENABLED and a provider key). Ask your developer to add them."
+            : hotel.aiChatEnabled
+              ? "On — guests can chat with the assistant on the website (rooms, rates, booking requests, Jiri)."
+              : "Off — the chat button and \"Ask\" links are hidden on the website."
+        }
+        className="mb-6"
+      >
+        <div className="flex flex-wrap items-center gap-4">
+          <p className="flex items-center gap-2 font-medium text-ink">
+            <Bot size={20} className={hotel.aiChatEnabled && isAiEnabled() ? "text-forest-600" : "text-muted"} aria-hidden />
+            Status: {hotel.aiChatEnabled && isAiEnabled() ? "On" : "Off"}
+          </p>
+          <AdminForm action={toggleAiChat}>
+            <SubmitButton variant={hotel.aiChatEnabled ? "outline" : "primary"}>{hotel.aiChatEnabled ? "Turn AI chat off" : "Turn AI chat on"}</SubmitButton>
+          </AdminForm>
+        </div>
+      </Panel>
 
       {/* ── Notifications ── */}
       <Panel

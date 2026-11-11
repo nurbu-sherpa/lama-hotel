@@ -131,6 +131,8 @@ model HotelSettings {
   /// Notification recipients & switches (Admin → Settings → Notifications).
   /// Sending credentials (SMTP keys) live in environment variables, never here.
   notifyEmail            Boolean  @default(true)
+  /// Guest AI chat on the website (Admin → Settings). Also needs AI keys in the environment.
+  aiChatEnabled          Boolean  @default(true)
   updatedAt              DateTime @updatedAt
 }
 

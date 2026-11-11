@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, MessageCircle } from "lucide-react";
-import { isAiEnabled } from "@/lib/ai/client";
+import { chatOn } from "@/lib/ai/client";
 import { getHotel, getPage } from "@/lib/data/public";
 import { Markdown } from "@/lib/markdown";
 import { cn } from "@/lib/utils/format";
@@ -85,7 +85,7 @@ export async function GuidePage({ slug, crumbs, ask }: { slug: (typeof GUIDE_PAG
               Staying in Jiri?
             </h2>
             <p className="mt-2 text-muted">{hotel.name} is in Jiri Bazaar — a simple, comfortable base for your visit.</p>
-            {ask && isAiEnabled() && (
+            {ask && chatOn(hotel) && (
               <AskButton className="btn-dark btn-sm mt-5">
                 <MessageCircle size={16} aria-hidden /> {ask}
               </AskButton>

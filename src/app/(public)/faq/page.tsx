@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/public/PageHeader";
 import { FAQAccordion } from "@/components/public/FAQAccordion";
 import { CTASection } from "@/components/public/CTASection";
 import { MessageCircle } from "lucide-react";
-import { isAiEnabled } from "@/lib/ai/client";
+import { chatOn } from "@/lib/ai/client";
 import { AskButton } from "@/components/public/ChatWidget";
 
 export function generateMetadata() {
@@ -20,7 +20,7 @@ export default async function FaqPage() {
       <PageHeader eyebrow="FAQ" title="Frequently asked questions" crumbs={[{ name: "FAQ", path: "/faq" }]} />
       <section className="container-page max-w-3xl py-12 sm:py-16">
         {faqs.length > 0 ? <FAQAccordion faqs={faqs} /> : <p className="text-muted">No questions yet.</p>}
-        {isAiEnabled() && (
+        {chatOn(hotel) && (
           <div className="mt-10 flex flex-col items-start gap-3 rounded-xl border border-cream-200 bg-cream-50 p-5 sm:flex-row sm:items-center sm:justify-between">
             <p className="font-semibold text-forest-900">Didn&apos;t find your answer?</p>
             <AskButton className="btn-dark btn-sm">

@@ -5,7 +5,7 @@ import { formatPhoneIntl, formatTime, telHref, todayInNepal, whatsappHref } from
 import { PageHeader } from "@/components/public/PageHeader";
 import { BookingForm } from "@/components/forms/BookingForm";
 import { WhatsAppIcon } from "@/components/shared/icons";
-import { isAiEnabled } from "@/lib/ai/client";
+import { chatOn } from "@/lib/ai/client";
 import { AskButton } from "@/components/public/ChatWidget";
 
 export function generateMetadata() {
@@ -35,7 +35,7 @@ export default async function BookingPage({ searchParams }: PageProps<"/booking"
               <strong className="font-semibold">This is a booking inquiry, not a confirmed reservation.</strong> We&apos;ll check availability and contact you to confirm.
             </span>
           </p>
-          {isAiEnabled() && (
+          {chatOn(hotel) && (
             <p className="mb-6 text-[0.95rem] text-muted">
               Not sure which room?{" "}
               <AskButton question="Help me choose a room" className="link-quiet font-semibold">

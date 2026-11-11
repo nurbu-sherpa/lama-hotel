@@ -3,7 +3,7 @@ import type { Hotel } from "@/lib/data/public";
 import { ContactButtons } from "./ContactButtons";
 import { RidgeLine } from "./RidgeLine";
 import { MessageCircle } from "lucide-react";
-import { isAiEnabled } from "@/lib/ai/client";
+import { chatOn } from "@/lib/ai/client";
 import { AskButton } from "./ChatWidget";
 
 /** Closing call to action — a full-width band that leads naturally into the footer. */
@@ -21,7 +21,7 @@ export function CTASection({ hotel, heading, body }: { hotel: Hotel; heading: st
             <Link href="/booking" className="btn-primary !min-h-12 !px-8 text-base">
               Check Availability
             </Link>
-            {isAiEnabled() && (
+            {chatOn(hotel) && (
               <AskButton className="btn-ghost-light !min-h-12 text-base">
                 <MessageCircle size={18} aria-hidden /> Ask a question
               </AskButton>

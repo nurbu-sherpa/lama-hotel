@@ -54,6 +54,14 @@ export async function updateSeoSettings(_p: ActionState, fd: FormData) {
   });
 }
 
+export async function toggleAiChat(): Promise<ActionState> {
+  return adminMutation(async () => {
+    const h = await prisma.hotelSettings.findUniqueOrThrow({ where: { id: "default" }, select: { aiChatEnabled: true } });
+    await prisma.hotelSettings.update({ where: { id: "default" }, data: { aiChatEnabled: !h.aiChatEnabled } });
+    return h.aiChatEnabled ? "AI chat turned off. Guests no longer see the chat on the website." : "AI chat turned on. Guests can now chat on the website.";
+  });
+}
+
 export async function togglePublicAvailability(): Promise<ActionState> {
   return adminMutation(
     async () => {

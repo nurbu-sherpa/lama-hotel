@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { isAiEnabled, streamWithFallback } from "@/lib/ai/client";
+import { getHotel } from "@/lib/data/public";
+import { chatOn, streamWithFallback } from "@/lib/ai/client";
 import { chatInstructions, chatInstructionsWithoutTools } from "@/lib/ai/prompt";
 import { detectLanguage, languageRule } from "@/lib/ai/language";
 import { quickReply } from "@/lib/ai/quick-reply";
@@ -33,7 +34,7 @@ const bodySchema = z.object({
 const json = (error: string, status: number) => Response.json({ error }, { status, headers: { "Cache-Control": "no-store" } });
 
 export async function POST(req: Request) {
-  if (!isAiEnabled()) return json("disabled", 404);
+  if (!chatOn(await getHotel())) return json("disabled", 404);
   if (!(await isSameOrigin())) return json("bad_request", 403);
 
   const ipHash = await currentIpHash();

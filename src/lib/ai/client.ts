@@ -95,6 +95,11 @@ export function isAiEnabled() {
   return config.enabled;
 }
 
+/** Guest chat on the website: AI configured in the environment AND switched on by the owner (Admin → Settings). */
+export function chatOn(hotel: { aiChatEnabled: boolean } | null | undefined) {
+  return config.enabled && Boolean(hotel?.aiChatEnabled);
+}
+
 /** Fall back only when the provider is unavailable (rate limit, quota, timeout, 5xx, dead key, retired model) — never on a bad request. */
 export function shouldFallBack(err: unknown): boolean {
   if (APICallError.isInstance(err)) {
