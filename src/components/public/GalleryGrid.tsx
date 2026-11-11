@@ -69,7 +69,6 @@ export function GalleryGrid({ images, categories }: Props) {
               <figcaption className="px-4 py-3">
                 <span className="block text-sm font-semibold text-forest-900">{img.title}</span>
                 {img.caption && <span className="mt-0.5 block text-sm text-muted">{img.caption}</span>}
-                {img.credit && <span className="mt-1 block text-[0.7rem] text-muted/80">{img.credit}</span>}
               </figcaption>
             </figure>
           </li>

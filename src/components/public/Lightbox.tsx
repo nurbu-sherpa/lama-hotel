@@ -118,16 +118,15 @@ export function Lightbox({
                 className="rounded-lg object-cover shadow-2xl"
               />
             </div>
-            <figcaption className="mt-5 text-center text-sm text-cream-100">
+            <figcaption className="mt-2 text-center text-sm text-cream-100">
               {img.title && <span className="block font-display text-lg text-white">{img.title}</span>}
               {img.caption && <span className="mt-1 block">{img.caption}</span>}
               {img.isHotelPhoto === false && <span className="mt-1 block text-xs text-clay-300">Destination photo — not a photo of the hotel</span>}
-              {img.credit && <span className="mt-1 block text-xs text-cream-200/70">{img.credit}</span>}
             </figcaption>
           </figure>
 
           {images.length > 1 && (
-            <ul ref={thumbs} aria-label="Choose an image" className="mt-4 flex w-full max-w-5xl gap-2 px-1 py-1 scrollbar-none justify-center-safe [&::-webkit-scrollbar]:hidden overflow-scroll">
+            <ul ref={thumbs} aria-label="Choose an image" className="mt-1 flex w-full max-w-5xl gap-2 px-1 py-1 scrollbar-none justify-center-safe [&::-webkit-scrollbar]:hidden overflow-scroll">
               {images.map((t, n) => (
                 <li key={t.url + n} className="shrink-0">
                   <button
