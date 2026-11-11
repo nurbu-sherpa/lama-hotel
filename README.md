@@ -1,7 +1,7 @@
 # Hotel Pine Valley — Website & Admin Dashboard
 
 Website and owner dashboard for **Hotel Pine Valley**, Jiri Bazaar, Jiri, Nepal
-(Jiri Bazaar · +977 9818486480 · hotelpinevalley.jiri@gmail.com).
+(Jiri Bazaar · +977 9865991827 · hotelpinevalley.jiri@gmail.com).
 
 - **Public website** — homepage, rooms & prices, Jiri travel guide, gallery, location, contact, booking inquiry, FAQ.
 - **Admin dashboard** (`/admin`) — the owner edits hotel details, rooms & prices, facilities, photos, homepage text,

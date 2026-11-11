@@ -23,7 +23,7 @@ export default async function HotelInfoPage() {
         <Panel title="Contact">
           <div className="grid gap-5 sm:grid-cols-2">
             <AText label="Phone" name="phone" type="tel" defaultValue={h.phone} required hint="Local numbers get +977 added automatically for call links." />
-            <AText label="WhatsApp number" name="whatsapp" type="tel" defaultValue={h.whatsapp} required hint="Include the country code, e.g. +9779818486480." />
+            <AText label="WhatsApp number" name="whatsapp" type="tel" defaultValue={h.whatsapp} required hint="Include the country code, e.g. +9779865991827." />
             <AText label="Email" name="email" type="email" defaultValue={h.email} required className="sm:col-span-2" />
           </div>
         </Panel>
