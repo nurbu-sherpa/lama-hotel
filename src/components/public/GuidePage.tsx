@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, MessageCircle } from "lucide-react";
+import { isAiEnabled } from "@/lib/ai/client";
 import { getHotel, getPage } from "@/lib/data/public";
 import { Markdown } from "@/lib/markdown";
 import { cn } from "@/lib/utils/format";
@@ -9,6 +10,7 @@ import { PageHeader } from "./PageHeader";
 import { ImageCredit } from "./ImageCredit";
 import { CTASection } from "./CTASection";
 import type { Crumb } from "./Breadcrumbs";
+import { AskButton } from "./ChatWidget";
 
 export const GUIDE_PAGES = [
   { slug: "jiri", href: "/jiri", label: "About Jiri" },
@@ -17,7 +19,7 @@ export const GUIDE_PAGES = [
 ] as const;
 
 /** Renders a Jiri guide page entirely from editable database sections (Admin → Jiri Guide). */
-export async function GuidePage({ slug, crumbs }: { slug: (typeof GUIDE_PAGES)[number]["slug"]; crumbs: Crumb[] }) {
+export async function GuidePage({ slug, crumbs, ask }: { slug: (typeof GUIDE_PAGES)[number]["slug"]; crumbs: Crumb[]; ask?: string }) {
   const [page, hotel] = await Promise.all([getPage(slug), getHotel()]);
   if (!page) notFound();
   const headerImage = page.sections.find((s) => s.imageUrl);
@@ -83,6 +85,11 @@ export async function GuidePage({ slug, crumbs }: { slug: (typeof GUIDE_PAGES)[n
               Staying in Jiri?
             </h2>
             <p className="mt-2 text-muted">{hotel.name} is in Jiri Bazaar — a simple, comfortable base for your visit.</p>
+            {ask && isAiEnabled() && (
+              <AskButton className="btn-dark btn-sm mt-5">
+                <MessageCircle size={16} aria-hidden /> {ask}
+              </AskButton>
+            )}
           </div>
           <ul className="grid gap-px overflow-hidden rounded-md border border-cream-300/80 bg-cream-300/80 sm:grid-cols-2 lg:col-span-8">
             {[

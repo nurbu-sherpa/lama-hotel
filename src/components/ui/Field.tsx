@@ -29,18 +29,28 @@ function describedBy(id: string, error?: string[], hint?: ReactNode) {
   return error?.length ? `${id}-error` : hint ? `${id}-hint` : undefined;
 }
 
-export function TextField({ label, name, error, hint, className, optional, ...props }: Common & ComponentProps<"input">) {
+export function TextField({ label, name, error, hint, className, optional, suffix, ...props }: Common & ComponentProps<"input"> & { suffix?: ReactNode }) {
   const id = props.id ?? `f-${name}`;
+  const input = (
+    <input
+      id={id}
+      name={name}
+      aria-invalid={error?.length ? true : undefined}
+      aria-describedby={describedBy(id, error, hint)}
+      className={cn("field-input", suffix ? "pr-10" : undefined)}
+      {...props}
+    />
+  );
   return (
     <Wrapper id={id} label={label} error={error} hint={hint} className={className} optional={optional}>
-      <input
-        id={id}
-        name={name}
-        aria-invalid={error?.length ? true : undefined}
-        aria-describedby={describedBy(id, error, hint)}
-        className="field-input"
-        {...props}
-      />
+      {suffix ? (
+        <div className="relative">
+          {input}
+          <div className="absolute inset-y-0 right-0 flex items-center pr-2">{suffix}</div>
+        </div>
+      ) : (
+        input
+      )}
     </Wrapper>
   );
 }

@@ -77,7 +77,7 @@ export async function notifyGuest(opts: { to: string; name: string; rows: [strin
       where: { id: "default" },
       select: { name: true, phone: true, whatsapp: true, email: true, notificationEmail: true },
     });
-    const hotelName = h?.name || "Lama Hotel & Lodge";
+    const hotelName = h?.name || "Hotel Pine Valley";
     const subject = `We received your booking inquiry — ${hotelName}`;
     const intro = `Dear ${opts.name},\n\n${BOOKING_SUCCESS_MESSAGE}\n\nPlease note: your room is not confirmed until we contact you. No payment is needed now.`;
     const contact = [h?.phone && `Phone ${formatPhoneIntl(h.phone)}`, h?.whatsapp && `WhatsApp ${formatPhoneIntl(h.whatsapp)}`].filter(Boolean).join(" · ");
@@ -92,8 +92,8 @@ export async function notifyGuest(opts: { to: string; name: string; rows: [strin
 
 /** Test messages from Admin → Settings (logged like real ones). */
 export async function sendTestEmail(to: string) {
-  const { html, text } = renderEmail("Test notification — Lama Hotel & Lodge", [["Status", "Email notifications are working."]], "You can change these settings in Admin → Settings.");
-  const r = await sendEmail({ to, subject: "Test notification — Lama Hotel & Lodge", html, text });
+  const { html, text } = renderEmail("Test notification — Hotel Pine Valley", [["Status", "Email notifications are working."]], "You can change these settings in Admin → Settings.");
+  const r = await sendEmail({ to, subject: "Test notification — Hotel Pine Valley", html, text });
   await log("EMAIL", "test", to, r);
   return r;
 }

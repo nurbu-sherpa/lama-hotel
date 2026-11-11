@@ -6,6 +6,8 @@ import { formatPhoneIntl, mailtoHref, telHref, whatsappHref } from "@/lib/utils/
 import { WhatsAppIcon } from "@/components/shared/icons";
 import { PageHeader } from "@/components/public/PageHeader";
 import { ContactForm } from "@/components/forms/ContactForm";
+import { isAiEnabled } from "@/lib/ai/client";
+import { AskButton } from "@/components/public/ChatWidget";
 
 export function generateMetadata() {
   return buildMetadata({ path: "/contact", pageSlug: "contact", title: "Contact Us" });
@@ -70,6 +72,12 @@ export default async function ContactPage() {
             </Link>
             .
           </p>
+          {isAiEnabled() && (
+            <p className="-mt-3 mb-6 text-[0.95rem] text-muted">
+              Need a quick answer?{" "}
+              <AskButton className="link-quiet font-semibold">Try our assistant</AskButton>
+            </p>
+          )}
           <ContactForm />
         </div>
       </section>

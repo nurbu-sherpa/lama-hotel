@@ -2,11 +2,12 @@
 
 import { prisma } from "@/lib/db";
 import { after } from "next/server";
-import { notifyGuest, notifyOwner } from "@/lib/notify";
+import { notifyOwner } from "@/lib/notify";
+import { createBookingInquiry } from "@/server/services/inquiries";
 import { currentIp, currentIpHash, isSameOrigin } from "@/lib/security";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { bookingSchema, contactSchema, fieldErrors, type FieldErrors } from "@/lib/validation/schemas";
-import { formatDate, formatPhoneIntl, formatPrice, todayInNepal } from "@/lib/utils/format";
+import { formatDate, formatPhoneIntl, todayInNepal } from "@/lib/utils/format";
 import { BOOKING_SUCCESS_MESSAGE } from "@/config/messages";
 import { getPublicAvailability } from "@/lib/data/availability";
 
@@ -21,7 +22,6 @@ export type PublicFormState = {
 };
 
 const HOUR = 60 * 60 * 1000;
-const MAX_BOOKINGS_PER_HOUR = 5;
 const MAX_MESSAGES_PER_HOUR = 5;
 const GENERIC_ERROR = "Sorry, something went wrong. Please try again, or call / WhatsApp us directly.";
 const BOT_CHECK_FAILED = "We couldn't confirm you're not a robot. Please complete the security check above the button and try again.";
@@ -32,7 +32,7 @@ const humanCheck = async (fd: FormData) => verifyTurnstile(String(fd.get("cf-tur
 /** Message the guest sends to the hotel from the success screen ("WhatsApp us"). */
 function bookingWhatsappText(d: { name: string; phone: string; checkIn: Date; checkOut: Date; roomType: string; numberOfRooms: number; guests: number; message?: string }) {
   const lines = [
-    "Hello Lama Hotel & Lodge, I just sent a booking inquiry on your website.",
+    "Hello Hotel Pine Valley, I just sent a booking inquiry on your website.",
     "",
     `Name: ${d.name}`,
     `Phone: ${d.phone}`,
@@ -65,94 +65,12 @@ export async function submitBookingInquiry(_prev: PublicFormState, formData: For
     const data = parsed.data;
     if (!(await humanCheck(formData))) return { status: "error", message: BOT_CHECK_FAILED, values };
 
-    const room = await prisma.room.findUnique({
-      where: { slug: data.roomSlug },
-      select: { id: true, name: true, price: true, currency: true, priceSuffix: true },
-    });
-    if (!room) return { status: "error", message: "Please choose a room type.", errors: { roomSlug: ["Please choose a room type"] }, values };
-
-    const ipHash = await currentIpHash();
-    const recent = await prisma.bookingInquiry.count({ where: { ipHash, createdAt: { gte: new Date(Date.now() - HOUR) } } });
-    if (recent >= MAX_BOOKINGS_PER_HOUR) {
+    const result = await createBookingInquiry(data, await currentIpHash());
+    if (result.status === "no_room") return { status: "error", message: "Please choose a room type.", errors: { roomSlug: ["Please choose a room type"] }, values };
+    if (result.status === "rate_limited") {
       return { status: "error", message: "You've sent several inquiries recently. Please wait a while, or call / WhatsApp us directly.", values };
     }
-
-    const checkIn = new Date(`${data.checkIn}T00:00:00Z`);
-    const checkOut = new Date(`${data.checkOut}T00:00:00Z`);
-    const whatsappText = bookingWhatsappText({ ...data, checkIn, checkOut, roomType: room.name });
-
-    // Duplicate submission (double click / resubmit) → don't create a second record.
-    const duplicate = await prisma.bookingInquiry.findFirst({
-      where: { email: data.email, checkIn, checkOut, roomId: room.id, createdAt: { gte: new Date(Date.now() - 10 * 60 * 1000) } },
-      select: { id: true },
-    });
-    if (duplicate) return { status: "success", message: BOOKING_SUCCESS_MESSAGE, whatsappText };
-
-    // 1) Save first — an inquiry must never be lost because email failed.
-    const inquiry = await prisma.bookingInquiry.create({
-      data: {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        country: data.country,
-        checkIn,
-        checkOut,
-        guests: data.guests, // informational only
-        roomId: room.id,
-        roomType: room.name,
-        numberOfRooms: data.numberOfRooms,
-        message: data.message,
-        arrivalInfo: data.arrivalInfo,
-        requestedRoomPrice: room.price, // snapshot of advertised price — NOT a confirmed price
-        currency: room.currency,
-        ipHash,
-      },
-    });
-
-    // 2) Then notify the owner by email AFTER the response is sent (best effort, never throws,
-    //    never delays or breaks the guest's submission).
-    after(() =>
-      notifyOwner({
-        event: "booking_inquiry",
-        replyTo: data.email,
-        subject: `New booking inquiry — ${room.name}, ${formatDate(checkIn)}`,
-      rows: [
-        ["Name", data.name],
-        ["Email", data.email],
-        ["Phone", data.phone],
-        ["Country", data.country],
-        ["Check-in", formatDate(checkIn)],
-        ["Check-out", formatDate(checkOut)],
-        ["Room type", `${room.name} (${formatPrice(room.price, room.currency)} ${room.priceSuffix})`],
-        ["Number of rooms", String(data.numberOfRooms)],
-        ["Guests", String(data.guests)],
-        ["Arrival info", data.arrivalInfo],
-        ["Message", data.message],
-        ["Reference", inquiry.id],
-      ],
-      }),
-    );
-
-    // 3) Thank-you email to the guest (also best effort, after the response).
-    after(() =>
-      notifyGuest({
-        to: data.email,
-        name: data.name,
-        rows: [
-          ["Name", data.name],
-          ["Phone", data.phone],
-          ["Check-in", formatDate(checkIn)],
-          ["Check-out", formatDate(checkOut)],
-          ["Room type", room.name],
-          ["Number of rooms", String(data.numberOfRooms)],
-          ["Guests", String(data.guests)],
-          ["Arrival info", data.arrivalInfo],
-          ["Message", data.message],
-          ["Reference", inquiry.id],
-        ],
-      }),
-    );
-
+    const whatsappText = bookingWhatsappText({ ...data, checkIn: new Date(`${data.checkIn}T00:00:00Z`), checkOut: new Date(`${data.checkOut}T00:00:00Z`), roomType: result.roomName });
     return { status: "success", message: BOOKING_SUCCESS_MESSAGE, whatsappText };
   } catch (err) {
     console.error("Booking inquiry failed", err);

@@ -76,23 +76,33 @@ export function bookingSchema(today: string) {
       arrivalInfo: text(500),
       website: z.string().max(0).optional(), // honeypot
     })
-    .superRefine((v, ctx) => {
-      if (v.checkIn < today) {
-        ctx.addIssue({ code: "custom", path: ["checkIn"], message: "Check-in date cannot be in the past" });
+    .superRefine(checkStayDates(today));
+}
+
+/** Shared stay-date rules: no past check-in, check-out after check-in, max stay, within two years. */
+function checkStayDates(today: string) {
+  return (v: { checkIn: string; checkOut: string }, ctx: z.RefinementCtx) => {
+    if (v.checkIn < today) {
+      ctx.addIssue({ code: "custom", path: ["checkIn"], message: "Check-in date cannot be in the past" });
+    }
+    if (v.checkOut <= v.checkIn) {
+      ctx.addIssue({ code: "custom", path: ["checkOut"], message: "Check-out must be after check-in" });
+    } else {
+      const nights = (Date.parse(v.checkOut) - Date.parse(v.checkIn)) / 86_400_000;
+      if (nights > MAX_STAY_NIGHTS) {
+        ctx.addIssue({ code: "custom", path: ["checkOut"], message: `For stays longer than ${MAX_STAY_NIGHTS} nights, please contact us directly` });
       }
-      if (v.checkOut <= v.checkIn) {
-        ctx.addIssue({ code: "custom", path: ["checkOut"], message: "Check-out must be after check-in" });
-      } else {
-        const nights = (Date.parse(v.checkOut) - Date.parse(v.checkIn)) / 86_400_000;
-        if (nights > MAX_STAY_NIGHTS) {
-          ctx.addIssue({ code: "custom", path: ["checkOut"], message: `For stays longer than ${MAX_STAY_NIGHTS} nights, please contact us directly` });
-        }
-      }
-      const maxDate = new Date(Date.parse(`${today}T00:00:00Z`) + 2 * 365 * 86_400_000).toISOString().slice(0, 10);
-      if (v.checkIn > maxDate) {
-        ctx.addIssue({ code: "custom", path: ["checkIn"], message: "Please choose a date within the next two years" });
-      }
-    });
+    }
+    const maxDate = new Date(Date.parse(`${today}T00:00:00Z`) + 2 * 365 * 86_400_000).toISOString().slice(0, 10);
+    if (v.checkIn > maxDate) {
+      ctx.addIssue({ code: "custom", path: ["checkIn"], message: "Please choose a date within the next two years" });
+    }
+  };
+}
+
+/** Dates only — the chat assistant's availability check uses the same rules as the booking form. */
+export function stayDatesSchema(today: string) {
+  return z.object({ checkIn: isoDate("Check-in"), checkOut: isoDate("Check-out") }).superRefine(checkStayDates(today));
 }
 
 export const contactSchema = z.object({
@@ -239,7 +249,11 @@ export const messageStatusSchema = z.enum(["NEW", "READ", "REPLIED", "ARCHIVED"]
 export const passwordChangeSchema = z
   .object({
     currentPassword: z.string().min(1, "Current password is required").max(200),
-    newPassword: z.string().min(12, "New password must be at least 12 characters").max(200),
+    newPassword: z
+      .string()
+      .min(6, "New password must be at least 6 characters")
+      .max(200)
+      .regex(/[^A-Za-z0-9\s]/, "New password must include a special character (e.g. ! @ # $ %)"),
     confirmPassword: z.string().max(200),
   })
   .refine((v) => v.newPassword === v.confirmPassword, { path: ["confirmPassword"], message: "Passwords do not match" });

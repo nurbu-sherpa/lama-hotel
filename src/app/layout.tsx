@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(siteUrl),
     title: { default: seo.siteTitle, template: seo.titleTemplate },
     description: seo.defaultDescription,
-    applicationName: "Lama Hotel & Lodge",
+    applicationName: "Hotel Pine Valley",
     formatDetection: { telephone: true, email: true, address: false },
     ...(seo.googleSiteVerification ? { verification: { google: seo.googleSiteVerification } } : {}),
   };

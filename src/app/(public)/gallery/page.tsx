@@ -25,7 +25,7 @@ export default async function GalleryPage() {
           <div className="mb-10 flex gap-3 border-l-2 border-clay-600 bg-clay-50 px-5 py-4 text-[0.98rem] text-clay-700">
             <Camera size={20} className="mt-0.5 shrink-0" aria-hidden />
             <p>
-              <strong>Photos of Lama Hotel &amp; Lodge are coming soon.</strong> The images below show Jiri and its surroundings — they are not photos of the
+              <strong>Photos of Hotel Pine Valley are coming soon.</strong> The images below show Jiri and its surroundings — they are not photos of the
               hotel or its rooms.
             </p>
           </div>

@@ -4,7 +4,7 @@ import { formatPhoneIntl } from "@/lib/utils/format";
 import { PageHeader } from "@/components/public/PageHeader";
 
 export function generateMetadata() {
-  return buildMetadata({ path: "/privacy", title: "Privacy Policy", description: "How Lama Hotel & Lodge handles the information you send through this website." });
+  return buildMetadata({ path: "/privacy", title: "Privacy Policy", description: "How Hotel Pine Valley handles the information you send through this website." });
 }
 
 export default async function PrivacyPage() {

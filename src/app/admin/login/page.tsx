@@ -16,7 +16,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/admin/logi
       <div className="w-full max-w-sm">
         <div className="text-center">
           <LogoMark className="mx-auto h-12 w-12" />
-          <h1 className="mt-4 font-display text-2xl font-semibold text-forest-900">Lama Hotel &amp; Lodge</h1>
+          <h1 className="mt-4 font-display text-2xl font-semibold text-forest-900">Hotel Pine Valley</h1>
           <p className="mt-1 text-sm text-muted">Admin dashboard — please log in</p>
         </div>
         {passwordChanged && (

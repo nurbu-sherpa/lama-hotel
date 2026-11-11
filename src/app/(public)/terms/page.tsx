@@ -4,7 +4,7 @@ import { formatTime } from "@/lib/utils/format";
 import { PageHeader } from "@/components/public/PageHeader";
 
 export function generateMetadata() {
-  return buildMetadata({ path: "/terms", title: "Terms of Use", description: "Terms for using the Lama Hotel & Lodge website and sending booking inquiries." });
+  return buildMetadata({ path: "/terms", title: "Terms of Use", description: "Terms for using the Hotel Pine Valley website and sending booking inquiries." });
 }
 
 export default async function TermsPage() {

@@ -14,12 +14,12 @@ const cacheOpts = { tags: [CONTENT_TAG], revalidate: 3600 };
 
 /** Verified fallback values used only if the database has not been seeded yet. */
 const DEFAULT_HOTEL = {
-  name: "Lama Hotel & Lodge",
+  name: "Hotel Pine Valley",
   tagline: "Your Comfortable Base in Jiri",
   description: "A comfortable lodge in Jiri Bazaar, Jiri, Nepal with 8 rooms, hot & cold shower anytime and free Wi-Fi.",
   phone: "9818486480",
   whatsapp: "+9779818486480",
-  email: "sherpanurbu15@gmail.com",
+  email: "hotelpinevalley.jiri@gmail.com",
   address: "Jiri Bazaar, Jiri, Nepal",
   locationDescription: "Right side of Hotel Paras, Jiri Bazaar",
   city: "Jiri",
@@ -27,7 +27,7 @@ const DEFAULT_HOTEL = {
   country: "Nepal",
   checkInTime: "14:00",
   checkOutTime: "12:00",
-  googleMapsUrl: "https://maps.app.goo.gl/VEmr3HbrdMTYuPjE7",
+  googleMapsUrl: "https://maps.app.goo.gl/TCUTmmfVyYscQCX59",
   googleMapsEmbedUrl: "",
   googleBusinessUrl: "",
   facebookUrl: "",
@@ -58,10 +58,10 @@ const hotelCached = unstable_cache(
 export const getHotel = () => safe(hotelCached, DEFAULT_HOTEL);
 
 const DEFAULT_SEO = {
-  siteTitle: "Lama Hotel & Lodge — Hotel in Jiri Bazaar, Nepal",
-  titleTemplate: "%s | Lama Hotel & Lodge, Jiri",
+  siteTitle: "Hotel Pine Valley — Hotel in Jiri Bazaar, Nepal",
+  titleTemplate: "%s | Hotel Pine Valley, Jiri",
   defaultDescription:
-    "Lama Hotel & Lodge is a comfortable lodge in Jiri Bazaar, Jiri, Nepal. 8 rooms, hot & cold shower anytime and free Wi-Fi.",
+    "Hotel Pine Valley is a comfortable lodge in Jiri Bazaar, Jiri, Nepal. 8 rooms, hot & cold shower anytime and free Wi-Fi.",
   defaultOgImageUrl: "/images/placeholders/jiri-himalaya-view.jpg",
   googleSiteVerification: "",
 };

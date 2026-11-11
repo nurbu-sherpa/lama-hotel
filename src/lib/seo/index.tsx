@@ -29,7 +29,7 @@ export async function buildMetadata(opts: {
     alternates: { canonical: url },
     openGraph: {
       type: "website",
-      siteName: "Lama Hotel & Lodge",
+      siteName: "Hotel Pine Valley",
       locale: "en_US",
       url,
       title: fullTitle,

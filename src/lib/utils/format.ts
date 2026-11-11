@@ -38,7 +38,7 @@ export function telHref(phone: string) {
   return `tel:+${phoneDigits(phone)}`;
 }
 
-const DEFAULT_WHATSAPP_MESSAGE = `Hello Lama Hotel & Lodge,
+const DEFAULT_WHATSAPP_MESSAGE = `Hello Hotel Pine Valley,
 
 I would like to inquire about accommodation.
 

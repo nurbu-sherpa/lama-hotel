@@ -8,6 +8,8 @@ import { AdminForm, SubmitButton } from "@/components/admin/AdminForm";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { AdminPageTitle, Panel, StatusBadge } from "@/components/admin/ui";
 import { WhatsAppIcon } from "@/components/shared/icons";
+import { AiDraftReply } from "@/components/admin/AiDraftReply";
+import { isAiEnabled } from "@/lib/ai/client";
 
 export const metadata = { title: "Message" };
 
@@ -26,14 +28,21 @@ export default async function MessageDetailPage({ params }: PageProps<"/admin/me
       </Link>
       <AdminPageTitle title={m.name} description={<StatusBadge status={m.status} />} />
       <div className="grid gap-6 lg:grid-cols-3">
-        <Panel title="Message" className="lg:col-span-2">
-          <p className="text-xs text-muted">{formatDateTime(m.createdAt)}</p>
-          <p className="mt-3 whitespace-pre-wrap text-ink">{m.message}</p>
-        </Panel>
+        <div className="space-y-6 lg:col-span-2">
+          <Panel title="Message">
+            <p className="text-xs text-muted">{formatDateTime(m.createdAt)}</p>
+            <p className="mt-3 whitespace-pre-wrap text-ink">{m.message}</p>
+          </Panel>
+          {isAiEnabled() && (
+            <Panel title="Reply draft">
+              <AiDraftReply kind="message" id={m.id} />
+            </Panel>
+          )}
+        </div>
         <div className="space-y-6">
           <Panel title="Reply">
             <div className="space-y-2 text-sm">
-              <a href={mailtoHref(m.email, "Re: your message to Lama Hotel & Lodge")} className="flex items-center gap-2 rounded-lg border border-cream-200 px-3 py-2.5 break-all hover:bg-cream-50">
+              <a href={mailtoHref(m.email, "Re: your message to Hotel Pine Valley")} className="flex items-center gap-2 rounded-lg border border-cream-200 px-3 py-2.5 break-all hover:bg-cream-50">
                 <Mail size={16} className="shrink-0" aria-hidden /> {m.email}
               </a>
               {m.phone && (
@@ -41,7 +50,7 @@ export default async function MessageDetailPage({ params }: PageProps<"/admin/me
                   <a href={telHref(m.phone)} className="flex items-center gap-2 rounded-lg border border-cream-200 px-3 py-2.5 hover:bg-cream-50">
                     <Phone size={16} aria-hidden /> {m.phone}
                   </a>
-                  <a href={whatsappHref(m.phone, `Hello ${m.name}, thank you for your message to Lama Hotel & Lodge.`)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 rounded-lg border border-cream-200 px-3 py-2.5 hover:bg-cream-50">
+                  <a href={whatsappHref(m.phone, `Hello ${m.name}, thank you for your message to Hotel Pine Valley.`)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 rounded-lg border border-cream-200 px-3 py-2.5 hover:bg-cream-50">
                     <WhatsAppIcon size={16} /> WhatsApp
                   </a>
                 </>

@@ -648,6 +648,16 @@ body[data-splash="off"] {
   }
 }
 
+/* ── Chat launcher (56px) sits where back-to-top used to; back-to-top stacks above it ── */
+body:has(#chat-launcher) .to-top {
+  bottom: calc(5.25rem + 4.25rem + env(safe-area-inset-bottom));
+}
+@media (min-width: 64rem) {
+  body:has(#chat-launcher) .to-top {
+    bottom: calc(1.5rem + 4.25rem);
+  }
+}
+
 /* ── Admin is a work tool: content appears almost immediately (short fade, no stagger/blur/scale) ── */
 .admin-main section,
 .admin-stagger > * {
@@ -657,4 +667,10 @@ body[data-splash="off"] {
   from {
     opacity: 0;
   }
+}
+
+/* Password fields have their own show/hide eye button — hide Edge's built-in one so there aren't two. */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
 }

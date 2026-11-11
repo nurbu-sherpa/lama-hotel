@@ -1,5 +1,5 @@
 {
-  "name": "lama-hotel",
+  "name": "hotel-pine-valley",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -14,14 +14,18 @@
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "postinstall": "prisma generate",
-    "test": "tsx --test tests/*.test.ts"
+    "test": "tsx --test tests/*.test.ts && tsx --conditions=react-server --test tests/server/*.test.ts"
   },
   "dependencies": {
+    "@ai-sdk/google": "^4.0.98",
+    "@ai-sdk/groq": "^4.0.62",
+    "@ai-sdk/openai-compatible": "^3.0.70",
     "@prisma/client": "^6.19.3",
+    "ai": "^7.0.142",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.11.0",
     "lucide-react": "^1.52.0",
-    "next": "16.3.8",
+    "next": "16.4.2",
     "next-auth": "^5.0.0-beta.32",
     "nodemailer": "^10.0.16",
     "react": "19.2.8",
@@ -38,7 +42,7 @@
     "@types/react-dom": "^19",
     "dotenv": "^16.6.1",
     "eslint": "^9",
-    "eslint-config-next": "16.3.8",
+    "eslint-config-next": "16.4.2",
     "prisma": "^6.19.3",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",

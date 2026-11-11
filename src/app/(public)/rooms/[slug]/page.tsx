@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BedDouble, CheckCircle2, DoorOpen, Users } from "lucide-react";
+import { BedDouble, CheckCircle2, DoorOpen, MessageCircle, Users } from "lucide-react";
+import { isAiEnabled } from "@/lib/ai/client";
+import { AskButton } from "@/components/public/ChatWidget";
 import { getFacilities, getHotel, getRoom, getRooms } from "@/lib/data/public";
 import { buildMetadata } from "@/lib/seo";
 import { getPublicAvailability } from "@/lib/data/availability";
@@ -100,6 +102,11 @@ export default async function RoomPage({ params }: PageProps<"/rooms/[slug]">) {
               <a href={whatsappHref(hotel.whatsapp, waMessage)} target="_blank" rel="noopener noreferrer" className="btn-outline !min-h-12">
                 Ask on WhatsApp
               </a>
+              {isAiEnabled() && (
+                <AskButton className="btn-ghost !min-h-12">
+                  <MessageCircle size={18} aria-hidden /> Ask about this room
+                </AskButton>
+              )}
             </div>
             <p className="mt-4 flex gap-2 text-[0.95rem] text-muted">
               <CheckCircle2 size={17} className="mt-0.5 shrink-0" aria-hidden />

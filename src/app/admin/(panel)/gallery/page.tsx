@@ -29,7 +29,7 @@ function MetaFields({ categories, img }: { categories: Category[]; img?: { title
       <AText label="Caption" name="caption" defaultValue={img?.caption} optional maxLength={500} />
       <AText label="Photo credit" name="credit" defaultValue={img?.credit} optional maxLength={250} hint="Required for photos you didn't take yourself." />
       <ACheckbox
-        label="This is a photo of Lama Hotel & Lodge"
+        label="This is a photo of Hotel Pine Valley"
         name="isHotelPhoto"
         defaultChecked={img?.isHotelPhoto ?? false}
         hint="Tick only for real photos of the hotel or rooms. Leave unticked for Jiri / mountain / travel photos."
@@ -52,7 +52,7 @@ export default async function AdminGalleryPage() {
     <>
       <AdminPageTitle
         title="Gallery"
-        description="The current photos show Jiri and its surroundings (temporary). Upload real photos of the hotel and tick “This is a photo of Lama Hotel & Lodge”. You can then delete the temporary images."
+        description="The current photos show Jiri and its surroundings (temporary). Upload real photos of the hotel and tick “This is a photo of Hotel Pine Valley”. You can then delete the temporary images."
       />
 
       {hotelPhotoCount === 0 && (

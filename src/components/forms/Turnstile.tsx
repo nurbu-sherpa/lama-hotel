@@ -37,8 +37,11 @@ function loadScript() {
   return loading;
 }
 
-/** `resetKey`: pass the form state — each new submit result gets a fresh token (tokens are single-use). */
-export function Turnstile({ resetKey }: { resetKey?: unknown }) {
+/**
+ * `resetKey`: pass the form state — each new submit result gets a fresh token (tokens are single-use).
+ * `appearance`: "interaction-only" keeps the widget invisible unless Cloudflare needs the visitor to click.
+ */
+export function Turnstile({ resetKey, appearance = "always" }: { resetKey?: unknown; appearance?: "always" | "interaction-only" }) {
   const ref = useRef<HTMLDivElement>(null);
   const widget = useRef<string | undefined>(undefined);
 
@@ -48,7 +51,7 @@ export function Turnstile({ resetKey }: { resetKey?: unknown }) {
     loadScript()
       .then(() => {
         if (cancelled || !ref.current || !window.turnstile) return;
-        widget.current = window.turnstile.render(ref.current, { sitekey: SITE_KEY, appearance: "always", size: "flexible" });
+        widget.current = window.turnstile.render(ref.current, { sitekey: SITE_KEY, appearance, size: "flexible" });
       })
       .catch(() => {
         /* blocked/offline: the server still accepts the form if Cloudflare is unreachable */
@@ -58,7 +61,7 @@ export function Turnstile({ resetKey }: { resetKey?: unknown }) {
       if (widget.current) window.turnstile?.remove(widget.current);
       widget.current = undefined;
     };
-  }, []);
+  }, [appearance]);
 
   useEffect(() => {
     if (widget.current) window.turnstile?.reset(widget.current);

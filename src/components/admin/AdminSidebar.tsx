@@ -164,7 +164,7 @@ export function AdminSidebar({ counts }: { counts: { bookings: number; messages:
       >
         <div className="mb-6 flex items-center justify-between px-2">
           <Link href="/admin/dashboard" className="font-display text-lg font-semibold text-white">
-            Lama Hotel <span className="text-clay-300">Admin</span>
+            Pine Valley <span className="text-clay-300">Admin</span>
           </Link>
           <button type="button" onClick={() => setOpen(false)} className="inline-flex h-10 w-10 items-center justify-center rounded-md text-cream-100 hover:bg-white/10 lg:hidden" aria-label="Close admin menu">
             <X size={20} aria-hidden />

@@ -9,6 +9,7 @@ export default function HowToReachPage() {
   return (
     <GuidePage
       slug="jiri-how-to-reach"
+      ask="Ask about getting here"
       crumbs={[
         { name: "Jiri", path: "/jiri" },
         { name: "How to Reach", path: "/jiri/how-to-reach" },

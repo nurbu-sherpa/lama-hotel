@@ -1,4 +1,4 @@
-// Lama Hotel & Lodge — database schema
+// Hotel Pine Valley — database schema
 // PostgreSQL + Prisma. All primary keys are UUIDs.
 
 generator client {
@@ -137,7 +137,7 @@ model HotelSettings {
 model SEOSettings {
   id                     String   @id @default("default")
   siteTitle              String
-  /// e.g. "%s | Lama Hotel & Lodge"
+  /// e.g. "%s | Hotel Pine Valley"
   titleTemplate          String
   defaultDescription     String   @db.Text
   defaultOgImageUrl      String   @default("")
@@ -257,7 +257,7 @@ model GalleryImage {
   alt          String
   /// Photo credit / licence (required for Creative Commons images).
   credit       String   @default("")
-  /// TRUE only for real photographs of Lama Hotel & Lodge.
+  /// TRUE only for real photographs of Hotel Pine Valley.
   /// FALSE for destination imagery (Jiri, mountains, etc.).
   isHotelPhoto Boolean  @default(false)
   featured     Boolean  @default(false)

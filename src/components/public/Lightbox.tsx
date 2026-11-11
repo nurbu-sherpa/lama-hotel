@@ -127,7 +127,7 @@ export function Lightbox({
           </figure>
 
           {images.length > 1 && (
-            <ul ref={thumbs} aria-label="Choose an image" className="mt-4 flex w-full max-w-5xl gap-2 overflow-x-auto px-1 py-1 [scrollbar-width:none] justify-center-safe [&::-webkit-scrollbar]:hidden">
+            <ul ref={thumbs} aria-label="Choose an image" className="mt-4 flex w-full max-w-5xl gap-2 px-1 py-1 scrollbar-none justify-center-safe [&::-webkit-scrollbar]:hidden overflow-scroll">
               {images.map((t, n) => (
                 <li key={t.url + n} className="shrink-0">
                   <button
@@ -135,7 +135,7 @@ export function Lightbox({
                     onClick={() => jump(n)}
                     aria-label={`Show image ${n + 1}: ${t.alt}`}
                     aria-current={n === i}
-                    className={`relative block aspect-[4/3] w-14 overflow-hidden rounded-md transition sm:w-20 ${
+                    className={`relative block aspect-4/3 w-14 overflow-hidden rounded-md transition sm:w-20 ${
                       n === i ? "opacity-100 ring-2 ring-white" : "opacity-50 hover:opacity-90"
                     }`}
                   >

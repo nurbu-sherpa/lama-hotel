@@ -1,7 +1,7 @@
-# Lama Hotel & Lodge — Website & Admin Dashboard
+# Hotel Pine Valley — Website & Admin Dashboard
 
-Website and owner dashboard for **Lama Hotel & Lodge**, Jiri Bazaar, Jiri, Nepal
-(right side of Hotel Paras · +977 9818486480 · sherpanurbu15@gmail.com).
+Website and owner dashboard for **Hotel Pine Valley**, Jiri Bazaar, Jiri, Nepal
+(right side of Hotel Paras · +977 9818486480 · hotelpinevalley.jiri@gmail.com).
 
 - **Public website** — homepage, rooms & prices, Jiri travel guide, gallery, location, contact, booking inquiry, FAQ.
 - **Admin dashboard** (`/admin`) — the owner edits hotel details, rooms & prices, facilities, photos, homepage text,
@@ -87,7 +87,7 @@ npm run dev                   # http://localhost:3000  ·  admin: http://localho
 Quick local PostgreSQL with Docker:
 
 ```bash
-docker run -d --name lama-hotel-db -e POSTGRES_USER=lama -e POSTGRES_PASSWORD=change-me \
+docker run -d --name pine-valley-db -e POSTGRES_USER=lama -e POSTGRES_PASSWORD=change-me \
   -e POSTGRES_DB=lama_hotel -p 5433:5432 postgres:16-alpine
 # DATABASE_URL="postgresql://lama:change-me@localhost:5433/lama_hotel?schema=public"  (DIRECT_URL = same)
 ```
@@ -105,6 +105,12 @@ docker run -d --name lama-hotel-db -e POSTGRES_USER=lama -e POSTGRES_PASSWORD=ch
 | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | production | Image uploads. Without them, uploads go to `./uploads` (dev) and are **disabled on Vercel** |
 | `SMTP_USER`, `SMTP_PASS` | optional | Gmail account that **sends** notification emails (an App Password, not the normal password). Alerts go to the hotel email or the address set in Admin → Settings |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | optional | Cloudflare Turnstile spam check on the booking and contact forms. Add every hostname (incl. `localhost`) to the widget in Cloudflare |
+| `AI_CHAT_ENABLED` | optional | `"true"` switches on AI features (needs at least one provider key below). Anything else = AI hidden |
+| `GOOGLE_GENERATIVE_AI_API_KEY`, `AI_PRIMARY_MODEL` | optional | Primary AI provider: Google Gemini (default `gemini-3.1-flash-lite`). Key from aistudio.google.com |
+| `GROQ_API_KEY`, `AI_FALLBACK1_MODEL` | optional | Fallback 1: Groq (default `openai/gpt-oss-120b`). Key from console.groq.com |
+| `AI_FALLBACK2_PROVIDER`, `AI_FALLBACK2_MODEL` | optional | Fallback 2: empty = every one of Cloudflare (default model `@cf/zai-org/glm-4.7-flash`) and OpenRouter that has keys, in that order; or `cloudflare` / `openrouter` for just one (then `AI_FALLBACK2_MODEL` applies). OpenRouter models must end in `:free` |
+| `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN` / `OPENROUTER_API_KEY` | optional | Keys for the chosen fallback 2 |
+| `AI_NO_TOOLS_PROVIDERS` | optional | Comma list of providers whose model can't call tools (e.g. `openrouter`); they answer from lodge info only |
 
 Never commit `.env` (it is in `.gitignore`).
 
@@ -132,7 +138,7 @@ Never commit `.env` (it is in `.gitignore`).
    (Supabase: "Transaction pooler" port 6543 with `?pgbouncer=true` for `DATABASE_URL`, port 5432 for `DIRECT_URL`).
 2. **Images** — create a free [Cloudinary](https://cloudinary.com) account and copy cloud name, API key and API secret.
 3. **Vercel** — import the Git repository. Add all environment variables above (Production + Preview).
-   Set `NEXT_PUBLIC_SITE_URL` to the real domain, e.g. `https://lamahoteljiri.com`.
+   Set `NEXT_PUBLIC_SITE_URL` to the real domain, e.g. `https://hotelpinevalleyjiri.com`.
 4. **Migrate & seed** (once, from your computer with the production env values):
    ```bash
    DATABASE_URL=... DIRECT_URL=... npm run db:deploy
@@ -162,7 +168,7 @@ Log in at `/admin`. Everything is in the left menu:
 - **Rooms** — prices (per room), beds, room photos, and the **physical rooms** (rename “Standard 1” to your door numbers, add a
   room, or mark one “out of service”). The number of rooms is counted from the physical rooms automatically.
 - **Facilities** — add only facilities you really offer; hide or reorder them.
-- **Gallery** — upload photos. Tick **"This is a photo of Lama Hotel & Lodge"** only for real hotel photos.
+- **Gallery** — upload photos. Tick **"This is a photo of Hotel Pine Valley"** only for real hotel photos.
   Then delete the temporary Jiri photos if you like.
 - **Homepage / Jiri Guide / FAQs** — edit text and images.
 - **Booking Inquiries** — website requests. Contact the guest (call / WhatsApp / email buttons), then **Convert to reservation**
@@ -208,6 +214,31 @@ switches live in the admin; credentials never do. Restart the server after chang
 
 Code: `src/lib/availability/core.ts` (pure logic, unit-tested), `src/server/services/reservations.ts` (transactional save),
 `src/lib/data/availability.ts` (public, counts only).
+
+## AI features (optional)
+
+- **Draft reply with AI** — on an inquiry or message page, the owner can ask for a reply draft. It uses only the hotel's own
+  data (rooms, prices, facilities, FAQs, live availability for the requested dates) and replies in the guest's language
+  (English or Nepali). The owner edits, copies and sends it — **the AI never sends anything**. Guest email/phone are not sent to the AI.
+- **Providers** are tried in order **Gemini → Groq → Cloudflare Workers AI or OpenRouter** (free tiers). A provider without a key is
+  skipped; the next one is used only on rate-limit, quota, timeout, or outage errors. Server logs show which provider answered, never message content.
+- **Guest chat assistant** — the "Ask us" button (bottom-right on every public page, never in the admin) and the "Ask"
+  buttons on room, booking, FAQ, how-to-reach, contact pages and the closing CTA band. It answers only from the website's
+  own data (rooms, facilities, FAQs, Jiri guides), replies in English or Nepali, declines unrelated questions, and can:
+  - check availability — only if **Show public availability** is on in Admin → Settings (counts per room type only);
+  - prepare a **booking request**: the chat shows a card with all the details and a **"Yes, send to the owner"** button.
+    Only the guest's button press sends it (the AI cannot send anything itself). It then goes through the same code as the
+    booking form, so it appears in Admin → Inquiries and you are notified as usual. **It never creates or confirms a reservation.**
+- **Privacy:** guest emails/phone numbers typed in the chat are replaced by placeholders before anything is sent to the AI
+  provider; chats are not stored on the server (only in the guest's browser tab).
+- **Abuse/cost limits:** per-IP limit (30 messages / 10 min, 150 / day — in memory per server instance), Turnstile checked once
+  per chat session (invisible unless Cloudflare is unsure), 1,000 characters per message, only the latest 16 messages sent with each question (the chat itself never stops), 500 output tokens.
+- Switched off unless `AI_CHAT_ENABLED="true"` and at least one key is set — then the site works exactly as without AI
+  (no launcher, no Ask buttons, `/api/chat` returns 404).
+
+Code: `src/lib/ai/client.ts` (all provider config + fallback), `src/lib/ai/prompt.ts`, `src/lib/ai/tools.ts`, `src/lib/ai/redact.ts`,
+`src/app/api/chat/route.ts`, `src/app/api/chat/confirm/route.ts`, `src/lib/ai/inquiry-draft.ts`, `src/components/public/ChatWidget.tsx` + `ChatPanel.tsx`, `src/server/actions/admin/ai-drafts.ts`,
+`src/components/admin/AiDraftReply.tsx`, `src/server/services/inquiries.ts` (shared booking-inquiry save).
 
 ## Security notes
 

@@ -2,6 +2,9 @@ import Link from "next/link";
 import type { Hotel } from "@/lib/data/public";
 import { ContactButtons } from "./ContactButtons";
 import { RidgeLine } from "./RidgeLine";
+import { MessageCircle } from "lucide-react";
+import { isAiEnabled } from "@/lib/ai/client";
+import { AskButton } from "./ChatWidget";
 
 /** Closing call to action — a full-width band that leads naturally into the footer. */
 export function CTASection({ hotel, heading, body }: { hotel: Hotel; heading: string; body: string }) {
@@ -14,9 +17,16 @@ export function CTASection({ hotel, heading, body }: { hotel: Hotel; heading: st
         </h2>
         {body && <p className="reveal mx-auto mt-5 max-w-xl text-lg leading-relaxed text-cream-100/85">{body}</p>}
         <div className="mt-9 flex flex-col items-center gap-5">
-          <Link href="/booking" className="btn-primary !min-h-12 !px-8 text-base">
-            Check Availability
-          </Link>
+          <div className="flex flex-col items-center gap-3 sm:flex-row">
+            <Link href="/booking" className="btn-primary !min-h-12 !px-8 text-base">
+              Check Availability
+            </Link>
+            {isAiEnabled() && (
+              <AskButton className="btn-ghost-light !min-h-12 text-base">
+                <MessageCircle size={18} aria-hidden /> Ask a question
+              </AskButton>
+            )}
+          </div>
           <ContactButtons hotel={hotel} variant="dark" className="justify-center" />
           <p className="text-sm text-cream-100/70">An inquiry is not a confirmed booking — we&apos;ll reply to confirm availability.</p>
         </div>

@@ -13,7 +13,7 @@ const escapeHtml = (s: string) =>
 
 export function emailProvider(): { name: "smtp" | null; from: string } {
   if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-    return { name: "smtp", from: process.env.EMAIL_FROM || `Lama Hotel & Lodge <${process.env.SMTP_USER}>` };
+    return { name: "smtp", from: process.env.EMAIL_FROM || `Hotel Pine Valley <${process.env.SMTP_USER}>` };
   }
   return { name: null, from: "" };
 }

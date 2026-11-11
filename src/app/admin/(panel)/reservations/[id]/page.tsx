@@ -45,7 +45,7 @@ export default async function ReservationPage({ params, searchParams }: PageProp
   const checkOut = toDateStr(r.checkOut);
   const assigned = r.assignments.map((a) => a.roomUnit.name);
   const canCheckIn = ["PENDING", "CONFIRMED"].includes(r.status) && today >= checkIn;
-  const waText = `Hello ${r.guestName}, this is Lama Hotel & Lodge about your stay ${formatDate(r.checkIn)} – ${formatDate(r.checkOut)}.`;
+  const waText = `Hello ${r.guestName}, this is Hotel Pine Valley about your stay ${formatDate(r.checkIn)} – ${formatDate(r.checkOut)}.`;
 
   return (
     <>
@@ -91,7 +91,7 @@ export default async function ReservationPage({ params, searchParams }: PageProp
               <WhatsAppIcon size={16} /> WhatsApp
             </a>
             {r.email && (
-              <a href={mailtoHref(r.email, "Your stay at Lama Hotel & Lodge")} className="flex items-center gap-2 rounded-lg border border-cream-200 px-3 py-2.5 break-all hover:bg-cream-50">
+              <a href={mailtoHref(r.email, "Your stay at Hotel Pine Valley")} className="flex items-center gap-2 rounded-lg border border-cream-200 px-3 py-2.5 break-all hover:bg-cream-50">
                 <Mail size={16} className="shrink-0" aria-hidden /> {r.email}
               </a>
             )}

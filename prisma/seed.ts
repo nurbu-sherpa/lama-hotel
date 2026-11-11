@@ -13,13 +13,13 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 const HOTEL = {
-  name: "Lama Hotel & Lodge",
+  name: "Hotel Pine Valley",
   tagline: "Your Comfortable Base in Jiri",
   description:
-    "Lama Hotel & Lodge is a small, friendly lodge in Jiri Bazaar, Jiri, Nepal. We offer 8 rooms, hot and cold showers anytime and free Wi-Fi — a comfortable place to rest for travellers visiting Jiri.",
+    "Hotel Pine Valley is a small, friendly lodge in Jiri Bazaar, Jiri, Nepal. We offer 8 rooms, hot and cold showers anytime and free Wi-Fi — a comfortable place to rest for travellers visiting Jiri.",
   phone: "9818486480",
   whatsapp: "+9779818486480",
-  email: "sherpanurbu15@gmail.com",
+  email: "hotelpinevalley.jiri@gmail.com",
   address: "Jiri Bazaar, Jiri, Nepal",
   locationDescription: "Right side of Hotel Paras, Jiri Bazaar",
   city: "Jiri",
@@ -27,7 +27,7 @@ const HOTEL = {
   country: "Nepal",
   checkInTime: "14:00",
   checkOutTime: "12:00",
-  googleMapsUrl: "https://maps.app.goo.gl/VEmr3HbrdMTYuPjE7",
+  googleMapsUrl: "https://maps.app.goo.gl/TCUTmmfVyYscQCX59",
 };
 
 // Temporary destination imagery (Wikimedia Commons, Creative Commons licences).
@@ -90,8 +90,8 @@ async function seedAdmin() {
     console.warn("⚠ ADMIN_EMAIL / ADMIN_PASSWORD not set — skipping admin user creation.");
     return;
   }
-  if (password.length < 12) {
-    throw new Error("ADMIN_PASSWORD must be at least 12 characters.");
+  if (password.length < 6 || !/[^A-Za-z0-9\s]/.test(password)) {
+    throw new Error("ADMIN_PASSWORD must be at least 6 characters and include a special character.");
   }
   const existing = await prisma.adminUser.findUnique({ where: { email } });
   if (existing) {
@@ -120,10 +120,10 @@ async function seedSettings() {
     update: {},
     create: {
       id: "default",
-      siteTitle: "Lama Hotel & Lodge — Hotel in Jiri Bazaar, Nepal",
-      titleTemplate: "%s | Lama Hotel & Lodge, Jiri",
+      siteTitle: "Hotel Pine Valley — Hotel in Jiri Bazaar, Nepal",
+      titleTemplate: "%s | Hotel Pine Valley, Jiri",
       defaultDescription:
-        "Lama Hotel & Lodge is a comfortable lodge in Jiri Bazaar, Jiri, Nepal. 8 rooms, hot & cold shower anytime and free Wi-Fi. Standard rooms from NPR 1,200 per room.",
+        "Hotel Pine Valley is a comfortable lodge in Jiri Bazaar, Jiri, Nepal. 8 rooms, hot & cold shower anytime and free Wi-Fi. Standard rooms from NPR 1,200 per room.",
       defaultOgImageUrl: PLACEHOLDERS.himalaya.url,
     },
   });
@@ -146,7 +146,7 @@ async function seedRooms() {
       sortOrder: 1,
       metaTitle: "Standard Room — NPR 1,200 per room",
       metaDescription:
-        "Standard Room at Lama Hotel & Lodge, Jiri Bazaar: two 4 × 6 ft beds, hot & cold shower anytime, free Wi-Fi. NPR 1,200 per room.",
+        "Standard Room at Hotel Pine Valley, Jiri Bazaar: two 4 × 6 ft beds, hot & cold shower anytime, free Wi-Fi. NPR 1,200 per room.",
     },
     {
       slug: "special-room",
@@ -162,7 +162,7 @@ async function seedRooms() {
       sortOrder: 2,
       metaTitle: "Special Room — NPR 1,500 per room",
       metaDescription:
-        "Special Room at Lama Hotel & Lodge, Jiri Bazaar: two 4 × 6 ft beds, hot & cold shower anytime, free Wi-Fi. NPR 1,500 per room.",
+        "Special Room at Hotel Pine Valley, Jiri Bazaar: two 4 × 6 ft beds, hot & cold shower anytime, free Wi-Fi. NPR 1,500 per room.",
     },
   ];
   const codes: Record<string, string> = { "standard-room": "STD", "special-room": "SPC" };
@@ -269,14 +269,14 @@ async function seedPages() {
     "home",
     {
       title: "Home",
-      metaTitle: "Lama Hotel & Lodge — Hotel in Jiri Bazaar, Jiri, Nepal",
+      metaTitle: "Hotel Pine Valley — Hotel in Jiri Bazaar, Jiri, Nepal",
       metaDescription:
-        "Stay at Lama Hotel & Lodge in Jiri Bazaar, Nepal. 8 comfortable rooms, hot & cold shower anytime and free Wi-Fi. Rooms from NPR 1,200 per room. Call or WhatsApp +977 9818486480.",
+        "Stay at Hotel Pine Valley in Jiri Bazaar, Nepal. 8 comfortable rooms, hot & cold shower anytime and free Wi-Fi. Rooms from NPR 1,200 per room. Call or WhatsApp +977 9818486480.",
     },
     [
       {
         key: "hero",
-        heading: "Lama Hotel & Lodge",
+        heading: "Hotel Pine Valley",
         body: "Your Comfortable Base in Jiri",
         imageUrl: PLACEHOLDERS.himalaya.url,
         imageAlt: PLACEHOLDERS.himalaya.alt,
@@ -289,7 +289,7 @@ async function seedPages() {
       },
       {
         key: "welcome",
-        heading: "Welcome to Lama Hotel & Lodge",
+        heading: "Welcome to Hotel Pine Valley",
         body: "We are a small lodge in **Jiri Bazaar**, right beside Hotel Paras, with eight rooms for travellers passing through or staying a while in Jiri.\n\nOur rooms are simple and comfortable, each with two beds. Hot and cold showers are available anytime, and Wi-Fi is free for guests.\n\nRoom prices are **per room, not per person**. Send us an inquiry, call or message us on WhatsApp, and we'll confirm availability for your dates.",
       },
       { key: "rooms_title", heading: "Our Rooms", body: "Eight rooms in two types. Prices are per room — not per person." },
@@ -324,7 +324,7 @@ async function seedPages() {
         "Jiri is a hill town in Dolakha District, eastern Nepal — a market town for the surrounding villages and a well-known starting point on the old walking route toward the Everest region.",
       metaTitle: "Jiri, Nepal — Travel Guide & Where to Stay",
       metaDescription:
-        "A practical introduction to Jiri, Nepal: Jiri Bazaar, the hills and mountain views, the classic trekking route and tips for visitors. Stay at Lama Hotel & Lodge in Jiri Bazaar.",
+        "A practical introduction to Jiri, Nepal: Jiri Bazaar, the hills and mountain views, the classic trekking route and tips for visitors. Stay at Hotel Pine Valley in Jiri Bazaar.",
     },
     [
       {
@@ -338,7 +338,7 @@ async function seedPages() {
       {
         key: "bazaar",
         heading: "Jiri Bazaar",
-        body: "Jiri Bazaar is the town's main market street and the everyday centre of life in Jiri. You'll find small shops, tea houses, and local businesses, and it's where buses and jeeps arrive and depart.\n\nLama Hotel & Lodge is located right in Jiri Bazaar, on the right side of Hotel Paras — convenient if you're arriving by road or heading out early.",
+        body: "Jiri Bazaar is the town's main market street and the everyday centre of life in Jiri. You'll find small shops, tea houses, and local businesses, and it's where buses and jeeps arrive and depart.\n\nHotel Pine Valley is located right in Jiri Bazaar, on the right side of Hotel Paras — convenient if you're arriving by road or heading out early.",
         imageUrl: PLACEHOLDERS.bazaar.url,
         imageAlt: PLACEHOLDERS.bazaar.alt,
         imageCredit: PLACEHOLDERS.bazaar.credit,
@@ -433,7 +433,7 @@ async function seedPages() {
       },
       {
         key: "finding-us",
-        heading: "Finding Lama Hotel & Lodge",
+        heading: "Finding Hotel Pine Valley",
         body: "Once you reach Jiri Bazaar, we're easy to find: **right side of Hotel Paras, Jiri Bazaar**. Use the Get Directions button for Google Maps, or call us when you arrive.",
       },
     ],
@@ -441,12 +441,12 @@ async function seedPages() {
 
   // SEO-only pages (meta title / description editable in Admin → SEO).
   const seoPages: [string, string, string, string][] = [
-    ["rooms", "Rooms & Prices", "Rooms & Prices", "Standard Rooms (NPR 1,200 per room) and Special Rooms (NPR 1,500 per room) at Lama Hotel & Lodge, Jiri Bazaar. Each room has two 4 × 6 ft beds. Hot & cold shower anytime, free Wi-Fi."],
-    ["gallery", "Gallery", "Gallery — Jiri & Lama Hotel & Lodge", "Photos of Jiri, Nepal and its mountains and surroundings. Photos of Lama Hotel & Lodge will be added soon."],
-    ["location", "Location", "Location — Lama Hotel & Lodge, Jiri Bazaar", "Find Lama Hotel & Lodge in Jiri Bazaar, Jiri, Nepal — right side of Hotel Paras. Get directions on Google Maps or call +977 9818486480."],
-    ["contact", "Contact Us", "Contact Lama Hotel & Lodge, Jiri", "Contact Lama Hotel & Lodge in Jiri Bazaar, Nepal. Call or WhatsApp +977 9818486480 or email sherpanurbu15@gmail.com."],
-    ["booking", "Booking Inquiry", "Book a Room in Jiri — Booking Inquiry", "Send a booking inquiry to Lama Hotel & Lodge in Jiri Bazaar, Nepal. We'll contact you to confirm availability. No payment needed online."],
-    ["faq", "Frequently Asked Questions", "FAQ — Lama Hotel & Lodge, Jiri", "Answers to common questions about staying at Lama Hotel & Lodge in Jiri Bazaar: prices, rooms, check-in times, Wi-Fi, hot showers and booking."],
+    ["rooms", "Rooms & Prices", "Rooms & Prices", "Standard Rooms (NPR 1,200 per room) and Special Rooms (NPR 1,500 per room) at Hotel Pine Valley, Jiri Bazaar. Each room has two 4 × 6 ft beds. Hot & cold shower anytime, free Wi-Fi."],
+    ["gallery", "Gallery", "Gallery — Jiri & Hotel Pine Valley", "Photos of Jiri, Nepal and its mountains and surroundings. Photos of Hotel Pine Valley will be added soon."],
+    ["location", "Location", "Location — Hotel Pine Valley, Jiri Bazaar", "Find Hotel Pine Valley in Jiri Bazaar, Jiri, Nepal — right side of Hotel Paras. Get directions on Google Maps or call +977 9818486480."],
+    ["contact", "Contact Us", "Contact Hotel Pine Valley, Jiri", "Contact Hotel Pine Valley in Jiri Bazaar, Nepal. Call or WhatsApp +977 9818486480 or email hotelpinevalley.jiri@gmail.com."],
+    ["booking", "Booking Inquiry", "Book a Room in Jiri — Booking Inquiry", "Send a booking inquiry to Hotel Pine Valley in Jiri Bazaar, Nepal. We'll contact you to confirm availability. No payment needed online."],
+    ["faq", "Frequently Asked Questions", "FAQ — Hotel Pine Valley, Jiri", "Answers to common questions about staying at Hotel Pine Valley in Jiri Bazaar: prices, rooms, check-in times, Wi-Fi, hot showers and booking."],
   ];
   for (const [slug, title, metaTitle, metaDescription] of seoPages) {
     await upsertPage(slug, { title, metaTitle, metaDescription });
@@ -458,7 +458,7 @@ async function seedFaqs() {
   if ((await prisma.fAQ.count()) > 0) return console.log("✓ FAQs (already present)");
   const faqs = [
     [
-      "Where is Lama Hotel & Lodge?",
+      "Where is Hotel Pine Valley?",
       "We are in Jiri Bazaar, Jiri, Nepal — right side of Hotel Paras. Use the Get Directions button on our Location page to open Google Maps.",
     ],
     [

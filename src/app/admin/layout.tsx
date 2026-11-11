@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: { default: "Admin", template: "%s · Admin · Lama Hotel & Lodge" },
+  title: { default: "Admin", template: "%s · Admin · Hotel Pine Valley" },
   robots: { index: false, follow: false },
 };
 

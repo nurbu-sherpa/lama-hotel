@@ -9,6 +9,8 @@ import { ASelect, ATextArea } from "@/components/admin/Fields";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { AdminPageTitle, Panel, StatusBadge } from "@/components/admin/ui";
 import { WhatsAppIcon } from "@/components/shared/icons";
+import { AiDraftReply } from "@/components/admin/AiDraftReply";
+import { isAiEnabled } from "@/lib/ai/client";
 
 export const metadata = { title: "Booking inquiry" };
 
@@ -21,7 +23,7 @@ export default async function InquiryDetailPage({ params }: PageProps<"/admin/in
   });
   if (!b) notFound();
   const nights = nightsBetween(b.checkIn, b.checkOut);
-  const waText = `Hello ${b.name}, thank you for your inquiry to Lama Hotel & Lodge for ${formatDate(b.checkIn)} – ${formatDate(b.checkOut)}.`;
+  const waText = `Hello ${b.name}, thank you for your inquiry to Hotel Pine Valley for ${formatDate(b.checkIn)} – ${formatDate(b.checkOut)}.`;
 
   const details: [string, React.ReactNode][] = [
     ["Check-in", formatDate(b.checkIn)],
@@ -72,6 +74,12 @@ export default async function InquiryDetailPage({ params }: PageProps<"/admin/in
             )}
           </Panel>
 
+          {isAiEnabled() && (
+            <Panel title="Reply draft">
+              <AiDraftReply kind="inquiry" id={b.id} />
+            </Panel>
+          )}
+
           <Panel title="Status & internal notes" description="Notes are private — guests never see them.">
             <AdminForm action={updateBookingInquiry} className="space-y-4">
               <input type="hidden" name="id" value={b.id} />
@@ -99,7 +107,7 @@ export default async function InquiryDetailPage({ params }: PageProps<"/admin/in
               <a href={whatsappHref(b.phone, waText)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 rounded-lg border border-cream-200 px-3 py-2.5 hover:bg-cream-50">
                 <WhatsAppIcon size={16} /> WhatsApp
               </a>
-              <a href={mailtoHref(b.email, "Your inquiry — Lama Hotel & Lodge")} className="flex items-center gap-2 rounded-lg border border-cream-200 px-3 py-2.5 break-all hover:bg-cream-50">
+              <a href={mailtoHref(b.email, "Your inquiry — Hotel Pine Valley")} className="flex items-center gap-2 rounded-lg border border-cream-200 px-3 py-2.5 break-all hover:bg-cream-50">
                 <Mail size={16} className="shrink-0" aria-hidden /> {b.email}
               </a>
             </div>

@@ -5,7 +5,7 @@ import { storageMode } from "@/lib/storage";
 import { emailProvider } from "@/lib/notify";
 import { changePassword, sendTestNotification, updateAccount, updateNotificationSettings } from "@/server/actions/admin/account";
 import { AdminForm, SubmitButton } from "@/components/admin/AdminForm";
-import { ACheckbox, AText } from "@/components/admin/Fields";
+import { ACheckbox, APassword, AText } from "@/components/admin/Fields";
 import { AdminPageTitle, Panel } from "@/components/admin/ui";
 import { formatDateTime } from "@/lib/utils/format";
 
@@ -124,9 +124,9 @@ export default async function SettingsPage() {
 
         <Panel title="Change password">
           <AdminForm action={changePassword} className="space-y-5" resetOnSuccess>
-            <AText label="Current password" name="currentPassword" type="password" autoComplete="current-password" required />
-            <AText label="New password" name="newPassword" type="password" autoComplete="new-password" minLength={12} required hint="At least 12 characters." />
-            <AText label="Confirm new password" name="confirmPassword" type="password" autoComplete="new-password" minLength={12} required />
+            <APassword label="Current password" name="currentPassword" autoComplete="current-password" required />
+            <APassword label="New password" name="newPassword" autoComplete="new-password" minLength={6} required hint="At least 6 characters, including a special character (e.g. ! @ # $ %)." />
+            <APassword label="Confirm new password" name="confirmPassword" autoComplete="new-password" minLength={6} required />
             <SubmitButton>Change password</SubmitButton>
           </AdminForm>
         </Panel>

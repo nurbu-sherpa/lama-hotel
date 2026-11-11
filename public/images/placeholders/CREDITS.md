@@ -1,7 +1,7 @@
 # Temporary destination photos — credits
 
 These are photos of **Jiri and its surroundings**, used as temporary imagery until real photos of
-Lama Hotel & Lodge are uploaded. **None of them show the hotel.** All are from Wikimedia Commons and
+Hotel Pine Valley are uploaded. **None of them show the hotel.** All are from Wikimedia Commons and
 licensed under Creative Commons; the credit line is shown on the website wherever they appear.
 
 | File | Shows | Author | Licence | Source |
