@@ -31,7 +31,7 @@ export default async function HotelInfoPage() {
         <Panel title="Address">
           <div className="grid gap-5 sm:grid-cols-2">
             <AText label="Address" name="address" defaultValue={h.address} required className="sm:col-span-2" />
-            <AText label="Location description" name="locationDescription" defaultValue={h.locationDescription} className="sm:col-span-2" hint="How guests can find you, e.g. “Right side of Hotel Paras, Jiri Bazaar”." />
+            <AText label="Location description" name="locationDescription" defaultValue={h.locationDescription} className="sm:col-span-2" hint="How guests can find you, e.g. “Jiri Bazaar, Jiri”." />
             <AText label="City" name="city" defaultValue={h.city} required />
             <AText label="District / region" name="region" defaultValue={h.region} optional />
             <AText label="Country" name="country" defaultValue={h.country} required />

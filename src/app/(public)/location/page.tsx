@@ -66,7 +66,7 @@ export default async function LocationPage() {
           <div className="panel-quiet p-6">
             <h2 className="font-display text-xl font-medium text-forest-900">Arriving in Jiri?</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted">
-              When you reach Jiri Bazaar, look for Hotel Paras — we&apos;re right beside it on the right side. If you get lost, just call us.
+              When you reach Jiri Bazaar, use the Get Directions button or just call us and we&apos;ll guide you.
             </p>
             <Link href="/jiri/how-to-reach" className="mt-3 inline-flex min-h-11 items-center text-[0.95rem] font-semibold text-clay-700 underline-offset-2 hover:underline">
               How to reach Jiri →

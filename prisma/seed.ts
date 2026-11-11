@@ -21,7 +21,7 @@ const HOTEL = {
   whatsapp: "+9779818486480",
   email: "hotelpinevalley.jiri@gmail.com",
   address: "Jiri Bazaar, Jiri, Nepal",
-  locationDescription: "Right side of Hotel Paras, Jiri Bazaar",
+  locationDescription: "Jiri Bazaar, Jiri",
   city: "Jiri",
   region: "Dolakha",
   country: "Nepal",
@@ -290,7 +290,7 @@ async function seedPages() {
       {
         key: "welcome",
         heading: "Welcome to Hotel Pine Valley",
-        body: "We are a small lodge in **Jiri Bazaar**, right beside Hotel Paras, with eight rooms for travellers passing through or staying a while in Jiri.\n\nOur rooms are simple and comfortable, each with two beds. Hot and cold showers are available anytime, and Wi-Fi is free for guests.\n\nRoom prices are **per room, not per person**. Send us an inquiry, call or message us on WhatsApp, and we'll confirm availability for your dates.",
+        body: "We are a small lodge in **Jiri Bazaar**, with eight rooms for travellers passing through or staying a while in Jiri.\n\nOur rooms are simple and comfortable, each with two beds. Hot and cold showers are available anytime, and Wi-Fi is free for guests.\n\nRoom prices are **per room, not per person**. Send us an inquiry, call or message us on WhatsApp, and we'll confirm availability for your dates.",
       },
       { key: "rooms_title", heading: "Our Rooms", body: "Eight rooms in two types. Prices are per room — not per person." },
       { key: "facilities_title", heading: "What we offer", body: "" },
@@ -338,7 +338,7 @@ async function seedPages() {
       {
         key: "bazaar",
         heading: "Jiri Bazaar",
-        body: "Jiri Bazaar is the town's main market street and the everyday centre of life in Jiri. You'll find small shops, tea houses, and local businesses, and it's where buses and jeeps arrive and depart.\n\nHotel Pine Valley is located right in Jiri Bazaar, on the right side of Hotel Paras — convenient if you're arriving by road or heading out early.",
+        body: "Jiri Bazaar is the town's main market street and the everyday centre of life in Jiri. You'll find small shops, tea houses, and local businesses, and it's where buses and jeeps arrive and depart.\n\nHotel Pine Valley is located right in Jiri Bazaar — convenient if you're arriving by road or heading out early.",
         imageUrl: PLACEHOLDERS.bazaar.url,
         imageAlt: PLACEHOLDERS.bazaar.alt,
         imageCredit: PLACEHOLDERS.bazaar.credit,
@@ -434,7 +434,7 @@ async function seedPages() {
       {
         key: "finding-us",
         heading: "Finding Hotel Pine Valley",
-        body: "Once you reach Jiri Bazaar, we're easy to find: **right side of Hotel Paras, Jiri Bazaar**. Use the Get Directions button for Google Maps, or call us when you arrive.",
+        body: "Once you reach Jiri Bazaar, we're easy to find: **Jiri Bazaar, Jiri**. Use the Get Directions button for Google Maps, or call us when you arrive.",
       },
     ],
   );
@@ -443,7 +443,7 @@ async function seedPages() {
   const seoPages: [string, string, string, string][] = [
     ["rooms", "Rooms & Prices", "Rooms & Prices", "Standard Rooms (NPR 1,200 per room) and Special Rooms (NPR 1,500 per room) at Hotel Pine Valley, Jiri Bazaar. Each room has two 4 × 6 ft beds. Hot & cold shower anytime, free Wi-Fi."],
     ["gallery", "Gallery", "Gallery — Jiri & Hotel Pine Valley", "Photos of Jiri, Nepal and its mountains and surroundings. Photos of Hotel Pine Valley will be added soon."],
-    ["location", "Location", "Location — Hotel Pine Valley, Jiri Bazaar", "Find Hotel Pine Valley in Jiri Bazaar, Jiri, Nepal — right side of Hotel Paras. Get directions on Google Maps or call +977 9818486480."],
+    ["location", "Location", "Location — Hotel Pine Valley, Jiri Bazaar", "Find Hotel Pine Valley in Jiri Bazaar, Jiri, Nepal. Get directions on Google Maps or call +977 9818486480."],
     ["contact", "Contact Us", "Contact Hotel Pine Valley, Jiri", "Contact Hotel Pine Valley in Jiri Bazaar, Nepal. Call or WhatsApp +977 9818486480 or email hotelpinevalley.jiri@gmail.com."],
     ["booking", "Booking Inquiry", "Book a Room in Jiri — Booking Inquiry", "Send a booking inquiry to Hotel Pine Valley in Jiri Bazaar, Nepal. We'll contact you to confirm availability. No payment needed online."],
     ["faq", "Frequently Asked Questions", "FAQ — Hotel Pine Valley, Jiri", "Answers to common questions about staying at Hotel Pine Valley in Jiri Bazaar: prices, rooms, check-in times, Wi-Fi, hot showers and booking."],
@@ -459,7 +459,7 @@ async function seedFaqs() {
   const faqs = [
     [
       "Where is Hotel Pine Valley?",
-      "We are in Jiri Bazaar, Jiri, Nepal — right side of Hotel Paras. Use the Get Directions button on our Location page to open Google Maps.",
+      "We are in Jiri Bazaar, Jiri, Nepal. Use the Get Directions button on our Location page to open Google Maps.",
     ],
     [
       "Are your prices per person or per room?",

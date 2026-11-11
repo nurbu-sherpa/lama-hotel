@@ -21,7 +21,7 @@ const DEFAULT_HOTEL = {
   whatsapp: "+9779818486480",
   email: "hotelpinevalley.jiri@gmail.com",
   address: "Jiri Bazaar, Jiri, Nepal",
-  locationDescription: "Right side of Hotel Paras, Jiri Bazaar",
+  locationDescription: "Jiri Bazaar, Jiri",
   city: "Jiri",
   region: "Dolakha",
   country: "Nepal",
